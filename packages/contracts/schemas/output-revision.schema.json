@@ -1,0 +1,575 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "revise": {
+          "type": "boolean",
+          "const": false
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "revise",
+        "reason"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "revise": {
+          "type": "boolean",
+          "const": true
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "changes": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "const": "insert-after"
+                  },
+                  "node": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "value": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^(p\\d+\\.)?c\\d+\\.u\\d+$"
+                      },
+                      "kind": {
+                        "type": "string",
+                        "const": "unit"
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "estimate": {
+                        "type": "string"
+                      },
+                      "prerequisites": {
+                        "default": [],
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^(p\\d+\\.)?c\\d+\\.u\\d+$"
+                        }
+                      },
+                      "objectives": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^obj\\.[a-z0-9][a-z0-9.-]*$"
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "level": {
+                              "type": "string",
+                              "enum": [
+                                "recall",
+                                "explain",
+                                "analyse",
+                                "evaluate",
+                                "create"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "text",
+                            "level"
+                          ]
+                        }
+                      },
+                      "modules": {
+                        "type": "object",
+                        "properties": {
+                          "reading": {
+                            "type": "object",
+                            "properties": {
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "planned",
+                                  "generating",
+                                  "generated",
+                                  "stale"
+                                ]
+                              },
+                              "approach": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "state"
+                            ]
+                          },
+                          "exercise": {
+                            "type": "object",
+                            "properties": {
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "planned",
+                                  "generating",
+                                  "generated",
+                                  "stale"
+                                ]
+                              },
+                              "approach": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "state"
+                            ]
+                          },
+                          "test": {
+                            "type": "object",
+                            "properties": {
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "planned",
+                                  "generating",
+                                  "generated",
+                                  "stale"
+                                ]
+                              },
+                              "approach": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "state"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "reading",
+                          "exercise",
+                          "test"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "kind",
+                      "title",
+                      "objectives",
+                      "modules"
+                    ]
+                  }
+                },
+                "required": [
+                  "op",
+                  "node",
+                  "value"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "const": "insert-into"
+                  },
+                  "node": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "value": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^(p\\d+\\.)?c\\d+\\.u\\d+$"
+                      },
+                      "kind": {
+                        "type": "string",
+                        "const": "unit"
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "estimate": {
+                        "type": "string"
+                      },
+                      "prerequisites": {
+                        "default": [],
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^(p\\d+\\.)?c\\d+\\.u\\d+$"
+                        }
+                      },
+                      "objectives": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^obj\\.[a-z0-9][a-z0-9.-]*$"
+                            },
+                            "text": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "level": {
+                              "type": "string",
+                              "enum": [
+                                "recall",
+                                "explain",
+                                "analyse",
+                                "evaluate",
+                                "create"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "text",
+                            "level"
+                          ]
+                        }
+                      },
+                      "modules": {
+                        "type": "object",
+                        "properties": {
+                          "reading": {
+                            "type": "object",
+                            "properties": {
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "planned",
+                                  "generating",
+                                  "generated",
+                                  "stale"
+                                ]
+                              },
+                              "approach": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "state"
+                            ]
+                          },
+                          "exercise": {
+                            "type": "object",
+                            "properties": {
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "planned",
+                                  "generating",
+                                  "generated",
+                                  "stale"
+                                ]
+                              },
+                              "approach": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "state"
+                            ]
+                          },
+                          "test": {
+                            "type": "object",
+                            "properties": {
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "planned",
+                                  "generating",
+                                  "generated",
+                                  "stale"
+                                ]
+                              },
+                              "approach": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "state"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "reading",
+                          "exercise",
+                          "test"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "kind",
+                      "title",
+                      "objectives",
+                      "modules"
+                    ]
+                  }
+                },
+                "required": [
+                  "op",
+                  "node",
+                  "value"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "const": "remove"
+                  },
+                  "node": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "op",
+                  "node"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "const": "move"
+                  },
+                  "node": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "after": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "op",
+                  "node",
+                  "after"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "const": "set-title"
+                  },
+                  "node": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "op",
+                  "node",
+                  "value"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "const": "set-module-state"
+                  },
+                  "node": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "module": {
+                    "type": "string",
+                    "enum": [
+                      "reading",
+                      "exercise",
+                      "test"
+                    ]
+                  },
+                  "value": {
+                    "type": "string",
+                    "enum": [
+                      "planned",
+                      "stale"
+                    ]
+                  }
+                },
+                "required": [
+                  "op",
+                  "node",
+                  "module",
+                  "value"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "const": "objective-add"
+                  },
+                  "node": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "value": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^obj\\.[a-z0-9][a-z0-9.-]*$"
+                      },
+                      "text": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "level": {
+                        "type": "string",
+                        "enum": [
+                          "recall",
+                          "explain",
+                          "analyse",
+                          "evaluate",
+                          "create"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "text",
+                      "level"
+                    ]
+                  }
+                },
+                "required": [
+                  "op",
+                  "node",
+                  "value"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "const": "objective-remove"
+                  },
+                  "node": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "objective": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "op",
+                  "node",
+                  "objective"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "const": "objective-edit"
+                  },
+                  "node": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "value": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^obj\\.[a-z0-9][a-z0-9.-]*$"
+                      },
+                      "text": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "level": {
+                        "type": "string",
+                        "enum": [
+                          "recall",
+                          "explain",
+                          "analyse",
+                          "evaluate",
+                          "create"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "text",
+                      "level"
+                    ]
+                  }
+                },
+                "required": [
+                  "op",
+                  "node",
+                  "value"
+                ]
+              }
+            ]
+          }
+        },
+        "reasons": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "revise",
+        "summary",
+        "changes"
+      ]
+    }
+  ]
+}

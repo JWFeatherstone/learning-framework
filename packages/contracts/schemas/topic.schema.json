@@ -38,7 +38,31 @@
           "type": "string"
         }
       },
-      "required": ["goals", "prior"]
+      "required": [
+        "goals",
+        "prior"
+      ]
+    },
+    "intake": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answer": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "question",
+          "answer"
+        ]
+      }
     },
     "models": {
       "type": "object",
@@ -58,5 +82,11 @@
       }
     }
   },
-  "required": ["id", "title", "created", "contractsVersion", "learner"]
+  "required": [
+    "id",
+    "title",
+    "created",
+    "contractsVersion",
+    "learner"
+  ]
 }

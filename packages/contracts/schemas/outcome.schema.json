@@ -20,11 +20,18 @@
           "type": "string"
         }
       },
-      "required": ["model", "prompt"]
+      "required": [
+        "model",
+        "prompt"
+      ]
     },
     "confidence": {
       "type": "string",
-      "enum": ["low", "medium", "high"]
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
     },
     "items": {
       "type": "array",
@@ -50,7 +57,12 @@
             "type": "string"
           }
         },
-        "required": ["id", "objective", "score", "of"]
+        "required": [
+          "id",
+          "objective",
+          "score",
+          "of"
+        ]
       }
     },
     "gaps": {
@@ -70,9 +82,18 @@
             "type": "string"
           }
         },
-        "required": ["objective", "diagnosis"]
+        "required": [
+          "objective",
+          "diagnosis"
+        ]
       }
     }
   },
-  "required": ["session", "module", "grader", "confidence", "items"]
+  "required": [
+    "session",
+    "module",
+    "grader",
+    "confidence",
+    "items"
+  ]
 }

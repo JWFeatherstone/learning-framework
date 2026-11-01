@@ -48,7 +48,11 @@
         },
         "by": {
           "type": "string",
-          "enum": ["server", "cli", "human"]
+          "enum": [
+            "server",
+            "cli",
+            "human"
+          ]
         },
         "cost": {
           "type": "object",
@@ -64,14 +68,22 @@
               "maximum": 9007199254740991
             }
           },
-          "required": ["inputTokens", "outputTokens"]
+          "required": [
+            "inputTokens",
+            "outputTokens"
+          ]
         },
         "reviewed": {
           "default": false,
           "type": "boolean"
         }
       },
-      "required": ["generatedAt", "model", "prompt", "by"]
+      "required": [
+        "generatedAt",
+        "model",
+        "prompt",
+        "by"
+      ]
     },
     "kind": {
       "type": "string",
@@ -93,7 +105,11 @@
           },
           "type": {
             "type": "string",
-            "enum": ["free", "choice", "source"]
+            "enum": [
+              "free",
+              "choice",
+              "source"
+            ]
           },
           "prompt": {
             "type": "string",
@@ -118,7 +134,12 @@
             "type": "string"
           }
         },
-        "required": ["id", "objective", "type", "prompt"]
+        "required": [
+          "id",
+          "objective",
+          "type",
+          "prompt"
+        ]
       }
     },
     "passing": {
@@ -134,5 +155,14 @@
       }
     }
   },
-  "required": ["id", "unit", "objectives", "approach", "planVersion", "provenance", "kind", "items"]
+  "required": [
+    "id",
+    "unit",
+    "objectives",
+    "approach",
+    "planVersion",
+    "provenance",
+    "kind",
+    "items"
+  ]
 }

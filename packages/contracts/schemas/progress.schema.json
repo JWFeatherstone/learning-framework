@@ -14,7 +14,12 @@
         "properties": {
           "state": {
             "type": "string",
-            "enum": ["not-started", "in-progress", "complete", "assessed"]
+            "enum": [
+              "not-started",
+              "in-progress",
+              "complete",
+              "assessed"
+            ]
           },
           "modules": {
             "type": "object",
@@ -24,7 +29,12 @@
                 "properties": {
                   "state": {
                     "type": "string",
-                    "enum": ["not-started", "in-progress", "complete", "assessed"]
+                    "enum": [
+                      "not-started",
+                      "in-progress",
+                      "complete",
+                      "assessed"
+                    ]
                   },
                   "at": {
                     "type": "string",
@@ -38,14 +48,21 @@
                     "type": "string"
                   }
                 },
-                "required": ["state"]
+                "required": [
+                  "state"
+                ]
               },
               "exercise": {
                 "type": "object",
                 "properties": {
                   "state": {
                     "type": "string",
-                    "enum": ["not-started", "in-progress", "complete", "assessed"]
+                    "enum": [
+                      "not-started",
+                      "in-progress",
+                      "complete",
+                      "assessed"
+                    ]
                   },
                   "at": {
                     "type": "string",
@@ -59,14 +76,21 @@
                     "type": "string"
                   }
                 },
-                "required": ["state"]
+                "required": [
+                  "state"
+                ]
               },
               "test": {
                 "type": "object",
                 "properties": {
                   "state": {
                     "type": "string",
-                    "enum": ["not-started", "in-progress", "complete", "assessed"]
+                    "enum": [
+                      "not-started",
+                      "in-progress",
+                      "complete",
+                      "assessed"
+                    ]
                   },
                   "at": {
                     "type": "string",
@@ -80,12 +104,17 @@
                     "type": "string"
                   }
                 },
-                "required": ["state"]
+                "required": [
+                  "state"
+                ]
               }
             }
           }
         },
-        "required": ["state", "modules"]
+        "required": [
+          "state",
+          "modules"
+        ]
       }
     },
     "mastery": {
@@ -108,7 +137,10 @@
             "pattern": "^\\d{4}-\\d{2}-\\d{2}"
           }
         },
-        "required": ["value", "lastAssessed"]
+        "required": [
+          "value",
+          "lastAssessed"
+        ]
       }
     }
   }

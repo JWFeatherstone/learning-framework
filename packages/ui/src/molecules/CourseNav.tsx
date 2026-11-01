@@ -33,13 +33,12 @@ interface Props {
 }
 
 // The plan as a tree down the left: parts as headers, chapters that open and close, units as rows with
-// a state mark and a thin bar for the modules finished. The chapter holding the current unit starts open;
-// the rest start closed, so a long plan fits.
+// a state mark and a thin bar for the modules finished. The chapter holding the current unit starts open
+// and the rest closed, so a long plan fits; with no current unit (the topic's home) every chapter is open.
 export function CourseNav({ parts, currentId, onSelect }: Props) {
-  const current = parts.flatMap((part) => part.chapters).find((chapter) =>
-    chapter.units.some((unit) => unit.id === currentId),
-  )
-  const [open, setOpen] = useState<Set<string>>(() => new Set(current ? [current.id] : []))
+  const chapters = parts.flatMap((part) => part.chapters)
+  const current = chapters.find((chapter) => chapter.units.some((unit) => unit.id === currentId))
+  const [open, setOpen] = useState<Set<string>>(() => new Set(current ? [current.id] : chapters.map((chapter) => chapter.id)))
   const toggle = (id: string) =>
     setOpen((now) => {
       const next = new Set(now)

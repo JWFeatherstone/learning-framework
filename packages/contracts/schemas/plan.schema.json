@@ -111,10 +111,20 @@
                                 },
                                 "level": {
                                   "type": "string",
-                                  "enum": ["recall", "explain", "analyse", "evaluate", "create"]
+                                  "enum": [
+                                    "recall",
+                                    "explain",
+                                    "analyse",
+                                    "evaluate",
+                                    "create"
+                                  ]
                                 }
                               },
-                              "required": ["id", "text", "level"]
+                              "required": [
+                                "id",
+                                "text",
+                                "level"
+                              ]
                             }
                           },
                           "modules": {
@@ -125,54 +135,95 @@
                                 "properties": {
                                   "state": {
                                     "type": "string",
-                                    "enum": ["planned", "generating", "generated", "stale"]
+                                    "enum": [
+                                      "planned",
+                                      "generating",
+                                      "generated",
+                                      "stale"
+                                    ]
                                   },
                                   "approach": {
                                     "type": "string"
                                   }
                                 },
-                                "required": ["state"]
+                                "required": [
+                                  "state"
+                                ]
                               },
                               "exercise": {
                                 "type": "object",
                                 "properties": {
                                   "state": {
                                     "type": "string",
-                                    "enum": ["planned", "generating", "generated", "stale"]
+                                    "enum": [
+                                      "planned",
+                                      "generating",
+                                      "generated",
+                                      "stale"
+                                    ]
                                   },
                                   "approach": {
                                     "type": "string"
                                   }
                                 },
-                                "required": ["state"]
+                                "required": [
+                                  "state"
+                                ]
                               },
                               "test": {
                                 "type": "object",
                                 "properties": {
                                   "state": {
                                     "type": "string",
-                                    "enum": ["planned", "generating", "generated", "stale"]
+                                    "enum": [
+                                      "planned",
+                                      "generating",
+                                      "generated",
+                                      "stale"
+                                    ]
                                   },
                                   "approach": {
                                     "type": "string"
                                   }
                                 },
-                                "required": ["state"]
+                                "required": [
+                                  "state"
+                                ]
                               }
                             },
-                            "required": ["reading", "exercise", "test"],
+                            "required": [
+                              "reading",
+                              "exercise",
+                              "test"
+                            ],
                             "additionalProperties": false
                           }
                         },
-                        "required": ["id", "kind", "title", "objectives", "modules"]
+                        "required": [
+                          "id",
+                          "kind",
+                          "title",
+                          "objectives",
+                          "modules"
+                        ]
                       }
                     }
                   },
-                  "required": ["id", "kind", "title", "children"]
+                  "required": [
+                    "id",
+                    "kind",
+                    "title",
+                    "children"
+                  ]
                 }
               }
             },
-            "required": ["id", "kind", "title", "children"]
+            "required": [
+              "id",
+              "kind",
+              "title",
+              "children"
+            ]
           }
         },
         {
@@ -238,10 +289,20 @@
                           },
                           "level": {
                             "type": "string",
-                            "enum": ["recall", "explain", "analyse", "evaluate", "create"]
+                            "enum": [
+                              "recall",
+                              "explain",
+                              "analyse",
+                              "evaluate",
+                              "create"
+                            ]
                           }
                         },
-                        "required": ["id", "text", "level"]
+                        "required": [
+                          "id",
+                          "text",
+                          "level"
+                        ]
                       }
                     },
                     "modules": {
@@ -252,54 +313,98 @@
                           "properties": {
                             "state": {
                               "type": "string",
-                              "enum": ["planned", "generating", "generated", "stale"]
+                              "enum": [
+                                "planned",
+                                "generating",
+                                "generated",
+                                "stale"
+                              ]
                             },
                             "approach": {
                               "type": "string"
                             }
                           },
-                          "required": ["state"]
+                          "required": [
+                            "state"
+                          ]
                         },
                         "exercise": {
                           "type": "object",
                           "properties": {
                             "state": {
                               "type": "string",
-                              "enum": ["planned", "generating", "generated", "stale"]
+                              "enum": [
+                                "planned",
+                                "generating",
+                                "generated",
+                                "stale"
+                              ]
                             },
                             "approach": {
                               "type": "string"
                             }
                           },
-                          "required": ["state"]
+                          "required": [
+                            "state"
+                          ]
                         },
                         "test": {
                           "type": "object",
                           "properties": {
                             "state": {
                               "type": "string",
-                              "enum": ["planned", "generating", "generated", "stale"]
+                              "enum": [
+                                "planned",
+                                "generating",
+                                "generated",
+                                "stale"
+                              ]
                             },
                             "approach": {
                               "type": "string"
                             }
                           },
-                          "required": ["state"]
+                          "required": [
+                            "state"
+                          ]
                         }
                       },
-                      "required": ["reading", "exercise", "test"],
+                      "required": [
+                        "reading",
+                        "exercise",
+                        "test"
+                      ],
                       "additionalProperties": false
                     }
                   },
-                  "required": ["id", "kind", "title", "objectives", "modules"]
+                  "required": [
+                    "id",
+                    "kind",
+                    "title",
+                    "objectives",
+                    "modules"
+                  ]
                 }
               }
             },
-            "required": ["id", "kind", "title", "children"]
+            "required": [
+              "id",
+              "kind",
+              "title",
+              "children"
+            ]
           }
         }
       ]
     }
   },
-  "required": ["version", "topic", "contractsVersion", "title", "shape", "rationale", "nodes"]
+  "required": [
+    "version",
+    "topic",
+    "contractsVersion",
+    "title",
+    "shape",
+    "rationale",
+    "nodes"
+  ]
 }

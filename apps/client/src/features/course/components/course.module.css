@@ -68,6 +68,7 @@
 
 .rowText {
   display: grid;
+  flex: 1 1 240px;
   gap: var(--space-1);
   min-width: 0;
 }

@@ -2,6 +2,7 @@ import { mkdtempSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { openBank } from "@lf/bank"
+import { planUnits } from "@lf/contracts"
 import { afterAll, describe, expect, it } from "vitest"
 import { createRuntime } from "./index"
 
@@ -48,7 +49,7 @@ describe("the loop", () => {
       expect(issues.filter((issue) => issue.level === "error")).toEqual([])
     }
     const { plan } = bank.loadTopic(slug)
-    expect(plan.nodes[0]?.children[0]?.modules.reading).toEqual({ state: "generated", approach: "perspectives" })
+    expect(planUnits(plan).find((unit) => unit.id === "c1.u1")?.modules.reading).toEqual({ state: "generated", approach: "perspectives" })
     expect(bank.check(slug)).toEqual([])
   })
 
@@ -94,7 +95,7 @@ describe("the loop", () => {
 
     const plan = await runtime.plan.accept(slug, graded.revision!.id)
     expect(plan.version).toBe(2)
-    expect(plan.nodes[0]?.children[0]?.modules.exercise.state).toBe("stale")
+    expect(planUnits(plan).find((unit) => unit.id === "c1.u1")?.modules.exercise.state).toBe("stale")
     const after = bank.loadTopic(slug)
     expect(after.revisions[0]?.revision.state).toBe("accepted")
     expect(after.files["plan.history/v1.yaml"]).toBeDefined()

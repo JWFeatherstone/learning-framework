@@ -8,7 +8,14 @@
     },
     "type": {
       "type": "string",
-      "enum": ["book", "article", "chapter", "video", "url", "primary"]
+      "enum": [
+        "book",
+        "article",
+        "chapter",
+        "video",
+        "url",
+        "primary"
+      ]
     },
     "citation": {
       "type": "string",
@@ -22,14 +29,24 @@
     },
     "access": {
       "type": "string",
-      "enum": ["library", "owned", "open", "paywalled", "unknown"]
+      "enum": [
+        "library",
+        "owned",
+        "open",
+        "paywalled",
+        "unknown"
+      ]
     },
     "verification": {
       "type": "object",
       "properties": {
         "state": {
           "type": "string",
-          "enum": ["unverified", "verified", "failed"]
+          "enum": [
+            "unverified",
+            "verified",
+            "failed"
+          ]
         },
         "by": {
           "type": "string"
@@ -42,8 +59,16 @@
           "type": "string"
         }
       },
-      "required": ["state"]
+      "required": [
+        "state"
+      ]
     }
   },
-  "required": ["id", "type", "citation", "access", "verification"]
+  "required": [
+    "id",
+    "type",
+    "citation",
+    "access",
+    "verification"
+  ]
 }

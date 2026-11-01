@@ -48,7 +48,11 @@
         },
         "by": {
           "type": "string",
-          "enum": ["server", "cli", "human"]
+          "enum": [
+            "server",
+            "cli",
+            "human"
+          ]
         },
         "cost": {
           "type": "object",
@@ -64,14 +68,22 @@
               "maximum": 9007199254740991
             }
           },
-          "required": ["inputTokens", "outputTokens"]
+          "required": [
+            "inputTokens",
+            "outputTokens"
+          ]
         },
         "reviewed": {
           "default": false,
           "type": "boolean"
         }
       },
-      "required": ["generatedAt", "model", "prompt", "by"]
+      "required": [
+        "generatedAt",
+        "model",
+        "prompt",
+        "by"
+      ]
     },
     "kind": {
       "type": "string",
@@ -89,5 +101,13 @@
       }
     }
   },
-  "required": ["id", "unit", "objectives", "approach", "planVersion", "provenance", "kind"]
+  "required": [
+    "id",
+    "unit",
+    "objectives",
+    "approach",
+    "planVersion",
+    "provenance",
+    "kind"
+  ]
 }

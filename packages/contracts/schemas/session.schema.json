@@ -8,7 +8,10 @@
     },
     "kind": {
       "type": "string",
-      "enum": ["exercise", "test"]
+      "enum": [
+        "exercise",
+        "test"
+      ]
     },
     "unit": {
       "type": "string",
@@ -16,7 +19,11 @@
     },
     "module": {
       "type": "string",
-      "enum": ["reading", "exercise", "test"]
+      "enum": [
+        "reading",
+        "exercise",
+        "test"
+      ]
     },
     "planVersion": {
       "type": "integer",
@@ -36,5 +43,12 @@
       "type": "string"
     }
   },
-  "required": ["id", "kind", "unit", "module", "planVersion", "startedAt"]
+  "required": [
+    "id",
+    "kind",
+    "unit",
+    "module",
+    "planVersion",
+    "startedAt"
+  ]
 }

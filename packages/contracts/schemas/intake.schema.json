@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goals": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prior": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hoursPerWeek": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "preferences": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "goals",
+    "prior"
+  ]
+}
