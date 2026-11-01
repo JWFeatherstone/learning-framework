@@ -16,6 +16,15 @@ const SCHEMAS = {
   session: contracts.Session,
   outcome: contracts.Outcome,
   revision: contracts.Revision,
+  attempt: contracts.Attempt,
+  intake: contracts.Intake,
+  "output-questions": contracts.QuestionsOutput,
+  "output-plan": contracts.PlanOutput,
+  "output-reading": contracts.ReadingOutput,
+  "output-exercise": contracts.ExerciseOutput,
+  "output-test": contracts.TestOutput,
+  "output-outcome": contracts.OutcomeOutput,
+  "output-revision": contracts.RevisionOutput,
 }
 
 const dir = join(dirname(fileURLToPath(import.meta.url)), "..", "schemas")

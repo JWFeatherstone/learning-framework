@@ -5,6 +5,7 @@ import { IsoDate, ModuleId, ModuleKind, ObjectiveId, UnitId } from "./ids"
 
 export const PROGRESS_STATES = ["not-started", "in-progress", "complete", "assessed"] as const
 export const ProgressState = z.enum(PROGRESS_STATES)
+export type ProgressState = z.infer<typeof ProgressState>
 
 const SessionId = z.string().min(1)
 
@@ -46,6 +47,13 @@ export const Session = z.object({
   outcome: z.string().optional(),
 })
 export type Session = z.infer<typeof Session>
+
+/** sessions/<id>/attempt.yaml: a test attempt's answers by item id, written before grading. */
+export const Attempt = z.object({
+  answers: z.record(z.string(), z.string()),
+  submittedAt: z.string(),
+})
+export type Attempt = z.infer<typeof Attempt>
 
 /** outcomes/<id>.yaml */
 export const Outcome = z.object({

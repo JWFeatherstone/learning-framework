@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { IsoDate, Slug } from "./ids"
+import { IntakeAnswer } from "./intake"
 
 export const LearnerProfile = z.object({
   goals: z.string().min(1),
@@ -24,6 +25,8 @@ export const Topic = z.object({
   created: IsoDate,
   contractsVersion: z.number().int().positive(),
   learner: LearnerProfile,
+  /** The wizard's questions and answers, so revisions plan from the same context as v1. */
+  intake: z.array(IntakeAnswer).default([]),
   models: ModelSettings,
 })
 export type Topic = z.infer<typeof Topic>

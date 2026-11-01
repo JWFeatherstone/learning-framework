@@ -1,5 +1,18 @@
+export { applyRevision } from "./apply"
 export { check, type Issue, type TopicFiles } from "./check"
-export { CONTRACTS_VERSION, MODULE_KINDS, ModuleKind, Provenance } from "./ids"
+export { Intake, IntakeAnswer, IntakeQuestion } from "./intake"
+export {
+  ExerciseOutput,
+  NewReference,
+  OutcomeOutput,
+  PlanOutput,
+  QuestionsOutput,
+  ReadingOutput,
+  RevisionOutput,
+  TestOutput,
+} from "./outputs"
+export { nextModule, topicCompletion, unitCompletion, unitMastery, unitState } from "./progress"
+export { CONTRACTS_VERSION, MODULE_KINDS, ModuleKind, Provenance, UNIT_ID } from "./ids"
 export { links, sections, splitFrontmatter } from "./markdown"
 export {
   EXERCISE_FORMS,
@@ -27,5 +40,5 @@ export {
 } from "./plan"
 export { ACCESS, REFERENCE_TYPES, ReferenceFrontmatter, VERIFICATION_STATES } from "./reference"
 export { Revision, RevisionOp } from "./revision"
-export { Outcome, Progress, PROGRESS_STATES, ProgressState, Session } from "./state"
+export { Attempt, Outcome, Progress, PROGRESS_STATES, ProgressState, Session } from "./state"
 export { LearnerProfile, ModelSettings, Topic } from "./topic"
