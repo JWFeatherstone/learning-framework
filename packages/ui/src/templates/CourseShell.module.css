@@ -1,0 +1,63 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.rail {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  width: var(--size-nav);
+  min-height: 0;
+  border-right: 1px solid var(--color-line);
+  background: var(--color-surface);
+  transition: width var(--duration-base) var(--ease-standard);
+}
+
+.shell[data-nav="closed"] .rail {
+  width: calc(var(--size-control-md) + var(--space-4));
+}
+
+.railHead {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.summary {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0 var(--space-2) var(--space-2);
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.page {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.column {
+  max-width: calc(var(--measure-prose) + var(--space-16));
+  padding: var(--space-8) var(--space-8) var(--space-24);
+}

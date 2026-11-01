@@ -9,7 +9,7 @@ import styles from "./foundations.lab.module.css"
 const STEPS = Array.from({ length: 12 }, (_, index) => index + 1)
 
 const ROLE_GROUPS: [string, (ColorRole | FillRole)[]][] = [
-  ["Surfaces", ["ground", "panel", "raised"]],
+  ["Surfaces", ["ground", "surface", "raised"]],
   ["Text", ["text", "text-muted", "text-faint", "text-on-inverse"]],
   ["Lines", ["line", "line-strong", "line-hover"]],
   ["Fills", ["fill", "fill-hover", "fill-active", "inverse"]],
@@ -77,52 +77,30 @@ function Type() {
   )
 }
 
-function Metric({
-  label,
-  value,
-  unit,
-  selected,
-}: {
-  label: string
-  value: string
-  unit?: string
-  selected?: boolean
-}) {
-  return (
-    <div className={styles.metric} data-selected={selected || undefined}>
-      <span className={styles.metricLabel}>{label}</span>
-      <span>
-        <span className={styles.metricValue}>{value}</span>
-        {unit && <span className={styles.unit}>{unit}</span>}
-      </span>
-    </div>
-  )
-}
-
-// The hierarchy, built from tokens alone: a muted label, a large value, a small unit.
+// The hierarchy, built from tokens alone, as the page shows it: an eyebrow, the unit's title, a lead,
+// the body at its measure, and the unit's facts as a list. Nothing boxed; the content is the page.
 function Hierarchy() {
   return (
-    <article className={styles.card}>
-      <header className={styles.head}>
-        <p className={styles.eyebrow}>Part 1 · Chapter 1 · Unit 1</p>
-        <h3 className={styles.display}>Manchuria</h3>
-        <p className={styles.tags}>
-          <span className={styles.tag}>
-            <i className={styles.marker} />
-            Reading complete
-          </span>
-          <span className={styles.tag}>Plan v2</span>
-        </p>
-      </header>
-      <div className={styles.metrics}>
-        <Metric label="Objectives" value="2" />
-        <Metric label="Mastery" value="0.60" selected />
-        <Metric label="Estimate" value="2" unit="h" />
-        <Metric label="Sessions" value="3" />
-      </div>
+    <article className={styles.excerpt}>
+      <p className={styles.eyebrow}>Part 1 · Chapter 1 · Unit 1</p>
+      <h3 className={styles.display}>Manchuria</h3>
+      <p className={styles.tags}>
+        <span className={styles.tag}>
+          <i className={styles.marker} />
+          Reading complete
+        </span>
+        <span className={styles.tag}>Plan v2</span>
+      </p>
+      <p className={styles.lead}>The same years look different from Tokyo, Nanjing and Geneva.</p>
+      <p className={styles.prose}>
+        The Washington system had rested on three assumptions, and by 1931 each had failed. This reading
+        takes the three capitals in turn and asks what each could see, and what each could do.
+      </p>
       <dl className={styles.facts}>
-        <dt>Shape</dt>
-        <dd>Chronological by theatre</dd>
+        <dt>Objectives</dt>
+        <dd>2, mastery 0.60</dd>
+        <dt>Estimate</dt>
+        <dd>2 h</dd>
         <dt>Approach</dt>
         <dd>Perspectives</dd>
         <dt>Unit</dt>
@@ -155,9 +133,9 @@ function ShapeAndDepth() {
         <TokenTable kind="radius" names={Object.keys(RADIUS).map((name) => `--radius-${name}`)} />
       </section>
       <section>
-        <h3 className={styles.groupName}>Raised surfaces</h3>
+        <h3 className={styles.groupName}>Overlays</h3>
         <div className={styles.pageStandIn}>
-          <div className={styles.floating}>Raised surface with the one shadow</div>
+          <div className={styles.floating}>Raised, with the one shadow: menus, dialogs, tooltips only</div>
         </div>
       </section>
     </div>

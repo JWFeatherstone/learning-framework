@@ -69,7 +69,7 @@ export function Select({ label, value, onValueChange, groups, ...lab }: Props) {
           align="start"
           sideOffset={4}
           className={`${list.content} ${styles.content}`}
-          // Esc closes the list and goes no further, so a panel around the select stays open.
+          // Esc closes the list and goes no further, so a dialog around the select stays open.
           onEscapeKeyDown={(event) => event.stopPropagation()}
           {...keyboardReturn}
         >

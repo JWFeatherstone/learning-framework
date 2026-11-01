@@ -1,0 +1,55 @@
+.group {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.option {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+  font: var(--type-body);
+  letter-spacing: var(--tracking-body);
+  cursor: pointer;
+}
+
+.option:hover {
+  box-shadow: inset 0 0 0 1px var(--color-line-hover);
+}
+
+.option[data-checked] {
+  background: var(--color-accent-subtle);
+  box-shadow: inset 0 0 0 1px var(--color-accent-line);
+}
+
+.option:has(.input:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.option:has(.input:disabled) {
+  color: var(--color-text-muted);
+  cursor: default;
+}
+
+/* The native radio is kept for keyboard and assistive tech, drawn as the letter instead. */
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+}
+
+.letter {
+  flex: none;
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  color: var(--color-text-muted);
+}
+
+.option[data-checked] .letter {
+  color: var(--color-accent-text);
+}

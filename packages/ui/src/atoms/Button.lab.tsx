@@ -74,8 +74,8 @@ function IconOnly() {
   return (
     <div className={`${styles.surface} ${styles.stack}`}>
       <div className={styles.row}>
-        <span className={styles.caption}>Module toolbar, current module on</span>
-        <div className={styles.toolbar}>
+        <span className={styles.caption}>In the bar, current module on</span>
+        <div className={styles.iconButtons}>
           <IconButton icon="reading" label="Reading" shortcut={["1"]} aria-pressed="true" />
           <IconButton icon="exercise" label="Exercise" shortcut={["2"]} aria-pressed="false" />
           <IconButton icon="test" label="Test" shortcut={["3"]} aria-pressed="false" />

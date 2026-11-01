@@ -6,10 +6,10 @@ import { Tooltip } from "./Tooltip"
 import { TooltipProvider } from "./TooltipProvider"
 import styles from "./atoms.lab.module.css"
 
-function OverThePage() {
+function OnThePage() {
   return (
-    <div className={`${styles.stage} ${styles.pageStage}`}>
-      <div className={styles.toolbar}>
+    <div className={styles.stage}>
+      <div className={styles.iconButtons}>
         <IconButton icon="nav" label="Hide the navigation" shortcut={["["]} aria-pressed="true" />
         <IconButton icon="reading" label="Reading" shortcut={["1"]} tooltipOpen />
         <IconButton icon="exercise" label="Exercise" shortcut={["2"]} />
@@ -24,9 +24,9 @@ function OverThePage() {
   )
 }
 
-function OnAPanel() {
+function OnASurface() {
   return (
-    <div className={`${styles.stage} ${styles.panelStage}`}>
+    <div className={`${styles.stage} ${styles.surfaceStage}`}>
       <Button
         variant="primary"
         icon="generate"
@@ -35,7 +35,7 @@ function OnAPanel() {
       >
         Generate exercise
       </Button>
-      <IconButton icon="table" label="Show the plan as a table" size="sm" tooltipOpen />
+      <IconButton icon="plan" label="Show the plan" size="sm" tooltipOpen />
     </div>
   )
 }
@@ -53,7 +53,7 @@ export const lab: LabEntry = {
   name: "Tooltip",
   level: "atom",
   states: {
-    "Over the page": withTooltips(OverThePage),
-    "On a panel, with a reason a button can't act": withTooltips(OnAPanel),
+    "On the page": withTooltips(OnThePage),
+    "On a surface, with a reason a button can't act": withTooltips(OnASurface),
   },
 }

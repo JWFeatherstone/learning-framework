@@ -8,7 +8,8 @@
     "./molecules/*": "./src/molecules/*.tsx",
     "./tokens/*": "./src/tokens/*.ts",
     "./lab": "./src/lab.ts",
-    "./base.css": "./src/base.css"
+    "./base.css": "./src/base.css",
+    "./templates/*": "./src/templates/*.tsx"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",

@@ -1,0 +1,28 @@
+/* A viewport for a whole screen. */
+.frame {
+  width: 100%;
+  height: 640px;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-ground);
+}
+
+.frame > * {
+  height: 100%;
+}
+
+.stack {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.modules {
+  margin-bottom: var(--space-8);
+}

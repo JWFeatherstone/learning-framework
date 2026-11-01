@@ -5,7 +5,7 @@ const PIXELS = { xs: SIZE["icon-xs"], sm: SIZE["icon-sm"], md: SIZE["icon-md"] }
 
 interface Props {
   name: IconName
-  /** 12px beside labels, 16px in text and controls, 20px in module cards and the navigation. */
+  /** 12px beside labels, 16px in text and controls, 20px in module rows and the navigation. */
   size?: keyof typeof PIXELS
 }
 

@@ -1,4 +1,5 @@
-/* Layout for the atoms' lab entries. Specimens sit on a panel, where they will live. */
+/* Layout for the atoms' lab entries. Specimens sit on a surface, as the bar and rail will hold them;
+   content elements sit on the ground. */
 
 .surface {
   display: grid;
@@ -6,7 +7,7 @@
   padding: var(--space-5);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
-  background: var(--color-panel);
+  background: var(--color-surface);
 }
 
 .stack {
@@ -62,14 +63,9 @@
   vertical-align: middle;
 }
 
-.toolbar {
+.iconButtons {
   display: inline-flex;
-  gap: 2px;
-  padding: 2px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
-  background: var(--color-panel);
-  box-shadow: var(--shadow-raised);
+  gap: var(--space-1);
 }
 
 .iconGroup {
@@ -100,7 +96,7 @@
   color: var(--color-text-muted);
 }
 
-/* Tooltip stages: room above for the open tooltips, over a page stand-in and on a panel. */
+/* Tooltip stages: room above for the open tooltips, on the ground and on a surface. */
 .stage {
   display: flex;
   flex-wrap: wrap;
@@ -110,14 +106,10 @@
   border-radius: var(--radius-md);
 }
 
-.pageStage {
-  background: linear-gradient(120deg, var(--gray-3), var(--gray-5) 45%, var(--gray-6) 70%, var(--gray-4));
-}
-
-.panelStage {
+.surfaceStage {
   justify-content: space-around;
   border: 1px solid var(--color-line);
-  background: var(--color-panel);
+  background: var(--color-surface);
 }
 
 /* Readouts */
@@ -148,7 +140,7 @@
   justify-items: start;
   gap: var(--space-1);
   padding: var(--space-3) var(--space-4);
-  background: var(--color-panel);
+  background: var(--color-surface);
 }
 
 .note {
@@ -190,22 +182,5 @@
   padding: 0 var(--space-4);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
-  background: var(--color-panel);
-}
-
-/* A corner of a page stand-in, with chrome in its bottom-right corner. */
-.corner {
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  height: 96px;
-  overflow: hidden;
-  border-radius: var(--radius-md);
-  background: repeating-linear-gradient(
-    120deg,
-    var(--gray-3) 0 40px,
-    var(--gray-5) 40px 80px,
-    var(--gray-6) 80px 120px,
-    var(--gray-4) 120px 160px
-  );
+  background: var(--color-surface);
 }

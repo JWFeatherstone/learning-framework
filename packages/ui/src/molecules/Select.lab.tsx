@@ -1,46 +1,33 @@
 import type { LabEntry } from "../lab"
 import { useState } from "react"
-import { Button } from "../atoms/Button"
+import { Text } from "../atoms/Text"
 import { TooltipProvider } from "../atoms/TooltipProvider"
-import { Panel } from "./Panel"
 import { Select, type SelectGroup } from "./Select"
 import labStyles from "../atoms/atoms.lab.module.css"
-import styles from "./molecules.lab.module.css"
 
 // One approach is not available yet, to show a disabled option.
-const TOPICS: SelectGroup[] = [
+const APPROACHES: SelectGroup[] = [
   { label: "Reading", options: ["Perspectives", "Narrative", "Summary", "Source study"] },
   { label: "Exercise", options: ["Seminar", "Debate", "Task"] },
   { label: "Test", options: ["Mixed paper", "Essay", "Oral"] },
 ].map(({ label, options }) => ({
   label,
-  options: options.map((topic) => ({ value: topic, label: topic, locked: topic === "Oral" })),
+  options: options.map((approach) => ({ value: approach, label: approach, locked: approach === "Oral" })),
 }))
 
 const STATES = ["rest", "hover", "open", "focus"] as const
 
-// Live: open the menu and press Esc. The menu closes; the panel stays. Esc again closes the panel.
-function InAPanel() {
-  const [topic, setTopic] = useState("Perspectives")
-  const [open, setOpen] = useState(true)
+// Live: the select sits in a module's heading row, on the page, where the approach is chosen before
+// regenerating.
+function InAHeading() {
+  const [approach, setApproach] = useState("Perspectives")
   return (
     <TooltipProvider>
-      <div className={styles.page}>
-        {open ? (
-          <Panel
-            label="Module"
-            title={<Select label="Approach" value={topic} onValueChange={setTopic} groups={TOPICS} />}
-            detail="p1.c1.u1 · reading"
-            closeLabel="Close"
-            onClose={() => setOpen(false)}
-          >
-            <div className={styles.placeholder} style={{ height: 200 }}>
-              {topic} brief
-            </div>
-          </Panel>
-        ) : (
-          <Button onClick={() => setOpen(true)}>Show the panel again</Button>
-        )}
+      <div className={labStyles.row}>
+        <Text variant="title" as="h3">
+          Reading
+        </Text>
+        <Select label="Approach" value={approach} onValueChange={setApproach} groups={APPROACHES} />
       </div>
     </TooltipProvider>
   )
@@ -56,10 +43,10 @@ function States() {
               <th>{state}</th>
               <td>
                 <Select
-                  label="Topic"
-                  value="Population"
+                  label="Approach"
+                  value="Seminar"
                   onValueChange={() => undefined}
-                  groups={TOPICS}
+                  groups={APPROACHES}
                   data-lab-state={state}
                 />
               </td>
@@ -75,7 +62,7 @@ export const lab: LabEntry = {
   name: "Select",
   level: "molecule",
   states: {
-    "In a panel header": InAPanel,
+    "In a module heading": InAHeading,
     States,
   },
 }

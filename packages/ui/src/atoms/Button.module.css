@@ -55,7 +55,7 @@
   background: color-mix(in oklab, var(--color-accent) 85%, var(--color-ground));
 }
 
-/* Secondary is a fill with a hairline, which keeps it defined on a dark panel. */
+/* Secondary is a fill with a hairline, which keeps it defined on a dark surface. */
 .secondary {
   background: var(--color-fill);
   color: var(--color-text);

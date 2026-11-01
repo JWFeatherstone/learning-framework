@@ -72,7 +72,7 @@ export function Menu({ trigger, align = "start", children }: MenuProps) {
           sideOffset={4}
           collisionPadding={8}
           className={`${list.content} ${styles.content}`}
-          // Esc closes the menu and goes no further, so a panel around it stays open.
+          // Esc closes the menu and goes no further, so a dialog around it stays open.
           onEscapeKeyDown={(event) => event.stopPropagation()}
           {...keyboardReturn}
         >

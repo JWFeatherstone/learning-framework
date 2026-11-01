@@ -1,0 +1,35 @@
+.mark {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+}
+
+.done {
+  color: var(--color-progress);
+}
+
+.stale {
+  color: var(--color-warning);
+}
+
+/* A 10px ring for the content states: hollow when planned, filled when ready, half when in progress. */
+.dot::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--color-text-faint);
+}
+
+.generated::before {
+  background: var(--color-text-faint);
+  box-shadow: none;
+}
+
+.in-progress::before {
+  background: linear-gradient(90deg, var(--color-progress) 50%, transparent 50%);
+  box-shadow: inset 0 0 0 1.5px var(--color-progress);
+}

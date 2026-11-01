@@ -46,7 +46,8 @@ export const SIZE = {
   "icon-md": 20,
   "hit-min": 24,
   row: 28,
-  outline: 280,
+  /** The navigation rail, open. */
+  nav: 280,
 } as const
 
 /** Line length for running text, in ch. */
@@ -60,8 +61,8 @@ export const MOTION = {
   "ease-standard": "cubic-bezier(0.2, 0, 0, 1)",
 } as const
 
-/** Stacking order, from the page up. */
-export const LAYER = { page: 0, chrome: 10, panel: 20, modal: 30, popover: 40, tooltip: 50 } as const
+/** Stacking order, from the page up. Nothing floats over the content but overlays. */
+export const LAYER = { page: 0, chrome: 10, modal: 30, popover: 40, tooltip: 50 } as const
 
 /** Behind a modal: the screen dimmed, more in the dark theme, where a lighter dim would read as fog. */
 export const SCRIM: Record<Theme, string> = {
@@ -69,7 +70,7 @@ export const SCRIM: Record<Theme, string> = {
   dark: "rgb(0 0 0 / 0.6)",
 }
 
-/** The one shadow, for raised surfaces: menus, popovers, dialogs. */
+/** The one shadow, for overlays only: menus, popovers, dialogs, tooltips. */
 export const SHADOW: Record<Theme, string> = {
   light: "0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.08)",
   dark: "0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.5)",

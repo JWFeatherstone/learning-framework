@@ -1,51 +1,12 @@
 /* Layout for the molecules' lab entries. */
 
-/* A stand-in for a page behind floating chrome. */
-.page {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-  height: 420px;
-  padding: var(--space-4);
-  border-radius: var(--radius-md);
-  background: repeating-linear-gradient(
-    120deg,
-    var(--gray-3) 0 40px,
-    var(--gray-5) 40px 80px,
-    var(--gray-6) 80px 120px,
-    var(--gray-4) 120px 160px
-  );
-}
-
-.placeholder {
-  display: grid;
-  place-items: center;
-  margin: var(--space-4);
-  border: 1px dashed var(--color-line-strong);
-  border-radius: var(--radius-md);
-  font: var(--type-label);
-  color: var(--color-text-muted);
-}
-
-.noteStage {
-  display: flex;
-  justify-content: flex-end;
-  height: 140px;
-  padding: var(--space-4);
-}
-
-/* The top bar over the page stand-in: full width, one line below. */
+/* The top bar above the page: full width, the ground below it. */
 .barStage {
   height: 160px;
-  border-radius: var(--radius-md);
   overflow: hidden;
-  background: repeating-linear-gradient(
-    120deg,
-    var(--gray-3) 0 40px,
-    var(--gray-5) 40px 80px,
-    var(--gray-6) 80px 120px,
-    var(--gray-4) 120px 160px
-  );
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-ground);
 }
 
 .bar {
@@ -54,51 +15,36 @@
   align-items: center;
   height: var(--space-12);
   border-bottom: 1px solid var(--color-line);
-  background: var(--color-raised);
+  background: var(--color-surface);
 }
 
-/* The page stand-in with chrome in its bottom-left corner. */
-.corner {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  height: 340px;
-  padding: var(--space-4);
-  border-radius: var(--radius-md);
-  background: repeating-linear-gradient(
-    120deg,
-    var(--gray-3) 0 40px,
-    var(--gray-5) 40px 80px,
-    var(--gray-6) 80px 120px,
-    var(--gray-4) 120px 160px
-  );
-}
-
-.pointer {
-  position: absolute;
-  top: 120px;
-  left: 300px;
-}
-
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: var(--space-4);
-}
-
-/* A solid surface for rows that live in a modal. */
-.sheet {
+/* Where the content elements live: a column of the page, on the ground, at the reading measure. */
+.column {
   display: grid;
-  width: 480px;
-  padding: var(--space-1) 0;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: calc(var(--measure-prose) + var(--space-12));
+  padding: var(--space-6) 0;
+}
+
+/* The navigation rail at its width, tall enough to show a few chapters. */
+.rail {
+  width: var(--size-nav);
+  height: 420px;
+  overflow: hidden;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
-  background: var(--color-raised);
+  background: var(--color-surface);
 }
 
-.sheetNarrow {
-  width: 208px;
+/* The seminar: a transcript at full height in the page column. */
+.session {
+  width: 560px;
+  height: 480px;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-ground);
 }
 
 .dialogBody {
@@ -107,12 +53,4 @@
   place-items: center;
   font: var(--type-label);
   color: var(--color-text-muted);
-}
-
-.tableSheet {
-  display: flex;
-  width: 560px;
-  height: 240px;
-  padding: 0;
-  overflow: hidden;
 }

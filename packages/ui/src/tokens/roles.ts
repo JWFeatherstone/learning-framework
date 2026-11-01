@@ -2,12 +2,14 @@ import { SCALES, type Hue, type Step, type Theme } from "./palette"
 
 type Ref = `${Hue}.${Step}`
 
-// A role names a job. Its step is the same in both themes, except raised surfaces: light raises
-// towards white, while dark keeps the panel step and lifts with border and shadow, because a
-// lighter step would collide with the resting fill (step 3) of the controls on it.
+// A role names a job. Content sits on the ground; `surface` is the chrome beside it (the bar, the
+// navigation rail, the composer), one step off. `raised` is for overlays only: menus, selects,
+// dialogs, tooltips. Light raises towards white, while dark keeps the surface step and lifts with
+// border and shadow, because a lighter step would collide with the resting fill (step 3) of the
+// controls on it. Nothing in the page body is boxed: the reading is the page.
 export const COLOR_ROLES = {
   ground: "gray.1",
-  panel: "gray.2",
+  surface: "gray.2",
   raised: { light: "gray.1", dark: "gray.2" },
 
   text: "gray.12",
@@ -42,7 +44,7 @@ export const COLOR_ROLES = {
 
 export type ColorRole = keyof typeof COLOR_ROLES
 
-/** Fills are the text colour laid thinly over whatever is behind, never a fixed grey. On a panel
+/** Fills are the text colour laid thinly over whatever is behind, never a fixed grey. On a surface
     they come out exactly as grey steps 3, 4 and 5. */
 export const FILLS = { fill: 0.04, "fill-hover": 0.08, "fill-active": 0.12 } as const
 

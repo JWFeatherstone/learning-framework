@@ -12,7 +12,7 @@
   color: var(--color-text-muted);
 }
 
-/* A well to type into: the ground colour, so it sits lighter than a light panel and darker than a
+/* A well to type into: the ground colour, so it sits lighter than a light surface and darker than a
    dark one, with a hairline. A secondary button is a raised grey fill, so the two never read alike. */
 .box {
   display: flex;
