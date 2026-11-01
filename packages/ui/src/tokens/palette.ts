@@ -36,10 +36,10 @@ export interface HueSpec {
 }
 
 // Step 9 of each hue is its solid; the rest of the scale is derived from it.
-// The accent is a placeholder, a muted slate blue, until a hue is chosen in the lab.
+// The accent is Clay, chosen in the lab on 2026-10-31.
 export const SOLIDS: Record<Hue, HueSpec> = {
   gray: { hue: 0, light: { lightness: 0.643, chroma: 0 }, dark: { lightness: 0.538, chroma: 0 } },
-  accent: { hue: 250, light: { lightness: 0.59, chroma: 0.09 }, dark: { lightness: 0.706, chroma: 0.1 } },
+  accent: { hue: 40, light: { lightness: 0.6, chroma: 0.11 }, dark: { lightness: 0.72, chroma: 0.11 } },
   red: { hue: 21, light: { lightness: 0.595, chroma: 0.159 }, dark: { lightness: 0.595, chroma: 0.159 } },
   amber: { hue: 51, light: { lightness: 0.68, chroma: 0.176 }, dark: { lightness: 0.68, chroma: 0.176 } },
 }

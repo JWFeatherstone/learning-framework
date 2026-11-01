@@ -1,7 +1,7 @@
 /* Layout for the molecules' lab entries. */
 
 /* A stand-in for a page behind floating chrome. */
-.map {
+.page {
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;

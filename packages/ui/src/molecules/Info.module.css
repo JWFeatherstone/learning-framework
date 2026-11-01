@@ -1,4 +1,4 @@
-/* Glass, like every menu over the map. Focus moves into the note when it opens; the note itself is the
+/* Raised, like every menu. Focus moves into the note when it opens; the note itself is the
    indicator, so it draws no ring. */
 .note {
   z-index: var(--layer-popover);

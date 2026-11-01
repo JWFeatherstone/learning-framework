@@ -132,7 +132,7 @@
   margin: 0;
 }
 
-.mapStandIn {
+.pageStandIn {
   padding: var(--space-8);
   border-radius: var(--radius-md);
   background: var(--color-fill-active);

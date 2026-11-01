@@ -156,7 +156,7 @@ function ShapeAndDepth() {
       </section>
       <section>
         <h3 className={styles.groupName}>Raised surfaces</h3>
-        <div className={styles.mapStandIn}>
+        <div className={styles.pageStandIn}>
           <div className={styles.floating}>Raised surface with the one shadow</div>
         </div>
       </section>

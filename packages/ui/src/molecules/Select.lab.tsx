@@ -7,37 +7,35 @@ import { Select, type SelectGroup } from "./Select"
 import labStyles from "../atoms/atoms.lab.module.css"
 import styles from "./molecules.lab.module.css"
 
-// One topic needs sign-in, to show a disabled option.
+// One approach is not available yet, to show a disabled option.
 const TOPICS: SelectGroup[] = [
-  { label: "Demographics", options: ["Population", "Age", "Race and ethnicity", "Households"] },
-  { label: "Economy", options: ["Income", "Jobs", "Poverty"] },
-  { label: "Housing", options: ["Homes", "Housing costs"] },
-  { label: "Mobility", options: ["Commuting", "Transit"] },
-  { label: "Safety", options: ["Crashes"] },
+  { label: "Reading", options: ["Perspectives", "Narrative", "Summary", "Source study"] },
+  { label: "Exercise", options: ["Seminar", "Debate", "Task"] },
+  { label: "Test", options: ["Mixed paper", "Essay", "Oral"] },
 ].map(({ label, options }) => ({
   label,
-  options: options.map((topic) => ({ value: topic, label: topic, locked: topic === "Housing costs" })),
+  options: options.map((topic) => ({ value: topic, label: topic, locked: topic === "Oral" })),
 }))
 
 const STATES = ["rest", "hover", "open", "focus"] as const
 
 // Live: open the menu and press Esc. The menu closes; the panel stays. Esc again closes the panel.
 function InAPanel() {
-  const [topic, setTopic] = useState("Population")
+  const [topic, setTopic] = useState("Perspectives")
   const [open, setOpen] = useState(true)
   return (
     <TooltipProvider>
-      <div className={styles.map}>
+      <div className={styles.page}>
         {open ? (
           <Panel
-            label="Selected cell"
-            title={<Select label="Topic" value={topic} onValueChange={setTopic} groups={TOPICS} />}
-            detail="Cell · 0.74 km²"
-            closeLabel="Clear selection"
+            label="Module"
+            title={<Select label="Approach" value={topic} onValueChange={setTopic} groups={TOPICS} />}
+            detail="p1.c1.u1 · reading"
+            closeLabel="Close"
             onClose={() => setOpen(false)}
           >
             <div className={styles.placeholder} style={{ height: 200 }}>
-              {topic} figures
+              {topic} brief
             </div>
           </Panel>
         ) : (

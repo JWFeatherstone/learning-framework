@@ -6,20 +6,18 @@ import { Tooltip } from "./Tooltip"
 import { TooltipProvider } from "./TooltipProvider"
 import styles from "./atoms.lab.module.css"
 
-function OverTheMap() {
+function OverThePage() {
   return (
-    <div className={`${styles.stage} ${styles.mapStage}`}>
+    <div className={`${styles.stage} ${styles.pageStage}`}>
       <div className={styles.toolbar}>
-        <IconButton icon="select" label="Inspect a cell" shortcut={["V"]} aria-pressed="true" />
-        <IconButton icon="drawPolygon" label="Draw a polygon" shortcut={["P"]} tooltipOpen />
-        <IconButton icon="drawRectangle" label="Draw a rectangle" shortcut={["R"]} />
-        <IconButton icon="drawCircle" label="Draw a circle" shortcut={["C"]} />
-        <IconButton icon="zoomIn" label="Zoom in" shortcut={["+"]} />
-        <IconButton icon="zoomOut" label="Zoom out" shortcut={["−"]} />
+        <IconButton icon="nav" label="Hide the navigation" shortcut={["["]} aria-pressed="true" />
+        <IconButton icon="reading" label="Reading" shortcut={["1"]} tooltipOpen />
+        <IconButton icon="exercise" label="Exercise" shortcut={["2"]} />
+        <IconButton icon="test" label="Test" shortcut={["3"]} />
       </div>
-      <Tooltip label="Search places" shortcut={["⌘", "K"]} open>
+      <Tooltip label="Search this topic" shortcut={["⌘", "K"]} open>
         <Button variant="secondary" icon="search">
-          Search places
+          Search
         </Button>
       </Tooltip>
     </div>
@@ -31,13 +29,13 @@ function OnAPanel() {
     <div className={`${styles.stage} ${styles.panelStage}`}>
       <Button
         variant="primary"
-        icon="download"
-        disabledReason="Exports include proprietary layers, so they need you to sign in."
+        icon="generate"
+        disabledReason="The reading is still being generated; the exercise comes after it."
         tooltipOpen
       >
-        Export
+        Generate exercise
       </Button>
-      <IconButton icon="table" label="Show figures as a table" size="sm" tooltipOpen />
+      <IconButton icon="table" label="Show the plan as a table" size="sm" tooltipOpen />
     </div>
   )
 }
@@ -55,7 +53,7 @@ export const lab: LabEntry = {
   name: "Tooltip",
   level: "atom",
   states: {
-    "Over the map": withTooltips(OverTheMap),
+    "Over the page": withTooltips(OverThePage),
     "On a panel, with a reason a button can't act": withTooltips(OnAPanel),
   },
 }

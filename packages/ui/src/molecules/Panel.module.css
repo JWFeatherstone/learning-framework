@@ -1,4 +1,4 @@
-/* Glass, like all chrome over the map. The container places it and caps its height. */
+/* A raised surface. The container places it and caps its height. */
 .panel {
   display: flex;
   flex-direction: column;

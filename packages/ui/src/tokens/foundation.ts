@@ -2,8 +2,8 @@ import type { Theme } from "./palette"
 
 // Placeholders until the lab picks a reading face; FAMILY is the one place a typeface changes.
 export const FAMILY = {
-  sans: '"Geist", system-ui, sans-serif',
-  mono: '"Geist Mono", ui-monospace, monospace',
+  sans: "system-ui, -apple-system, sans-serif",
+  mono: "ui-monospace, SFMono-Regular, Menlo, monospace",
 } as const
 
 export interface TextStyle {

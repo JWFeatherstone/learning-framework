@@ -5,28 +5,28 @@ import styles from "./molecules.lab.module.css"
 
 const GROUPS: NavGroup[] = [
   {
-    label: "Data layers",
+    label: "This topic",
     items: [
-      { value: "demographics", label: "Demographics", count: 10 },
-      { value: "economy", label: "Economy", count: 5 },
-      { value: "housing", label: "Housing", count: 5 },
+      { value: "outline", label: "Outline", count: 12 },
+      { value: "references", label: "References", count: 5 },
+      { value: "sessions", label: "Sessions", count: 3 },
     ],
   },
   {
-    label: "Overlays",
+    label: "Plan",
     items: [
-      { value: "transit", label: "Transit", count: 2 },
-      { value: "places", label: "Places", count: 3 },
+      { value: "revisions", label: "Revisions", count: 1 },
+      { value: "history", label: "History", count: 2 },
     ],
   },
 ]
 
 // Live: click a section.
 function Sections() {
-  const [value, setValue] = useState("demographics")
+  const [value, setValue] = useState("outline")
   return (
     <div className={`${styles.sheet} ${styles.sheetNarrow}`}>
-      <NavList label="Catalog sections" groups={GROUPS} value={value} onValueChange={setValue} />
+      <NavList label="Topic sections" groups={GROUPS} value={value} onValueChange={setValue} />
     </div>
   )
 }

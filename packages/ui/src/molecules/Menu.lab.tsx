@@ -5,10 +5,10 @@ import { TooltipProvider } from "../atoms/TooltipProvider"
 import { Menu, MenuAction, MenuChoices, MenuGroup, MenuToggle, type MenuChoice } from "./Menu"
 import styles from "./molecules.lab.module.css"
 
-const SHAPES: MenuChoice[] = [
-  { value: "polygon", label: "Polygon", icon: "drawPolygon", shortcut: ["P"] },
-  { value: "rectangle", label: "Rectangle", icon: "drawRectangle", shortcut: ["R"] },
-  { value: "circle", label: "Circle", icon: "drawCircle", shortcut: ["C"] },
+const MODULES: MenuChoice[] = [
+  { value: "reading", label: "Reading", icon: "reading", shortcut: ["1"] },
+  { value: "exercise", label: "Exercise", icon: "exercise", shortcut: ["2"] },
+  { value: "test", label: "Test", icon: "test", shortcut: ["3"] },
 ]
 
 const THEMES: MenuChoice[] = [
@@ -17,29 +17,29 @@ const THEMES: MenuChoice[] = [
   { value: "system", label: "Match the system" },
 ]
 
-// Live: the button shows the shape last chosen.
-export function DrawMenu({ pressed, onDraw }: { pressed?: boolean; onDraw?: () => void }) {
-  const [shape, setShape] = useState("polygon")
-  const icon = SHAPES.find((option) => option.value === shape)?.icon ?? "drawPolygon"
+// Live: the button shows the module last chosen.
+export function ModuleMenu({ pressed, onChoose }: { pressed?: boolean; onChoose?: () => void }) {
+  const [module, setModule] = useState("reading")
+  const icon = MODULES.find((option) => option.value === module)?.icon ?? "reading"
   const choose = (next: string) => {
-    setShape(next)
-    onDraw?.()
+    setModule(next)
+    onChoose?.()
   }
   return (
-    <Menu trigger={<IconButton icon={icon} label="Draw an area" menu aria-pressed={pressed} />}>
-      <MenuChoices label="Draw an area" value={shape} onValueChange={choose} options={SHAPES} />
+    <Menu trigger={<IconButton icon={icon} label="Go to a module" menu aria-pressed={pressed} />}>
+      <MenuChoices label="Module" value={module} onValueChange={choose} options={MODULES} />
     </Menu>
   )
 }
 
 export function SettingsMenu() {
   const [theme, setTheme] = useState("system")
-  const [names, setNames] = useState(true)
+  const [mastery, setMastery] = useState(true)
   return (
     <Menu trigger={<IconButton icon="settings" label="Settings" />} align="end">
       <MenuChoices label="Theme" value={theme} onValueChange={setTheme} options={THEMES} />
-      <MenuGroup label="Map">
-        <MenuToggle label="Place names" checked={names} onCheckedChange={setNames} />
+      <MenuGroup label="Navigation">
+        <MenuToggle label="Show mastery per unit" checked={mastery} onCheckedChange={setMastery} />
       </MenuGroup>
       <MenuGroup>
         <MenuAction label="Keyboard shortcuts" shortcut={["?"]} onSelect={() => undefined} />
@@ -63,9 +63,9 @@ export const lab: LabEntry = {
   name: "Menu",
   level: "molecule",
   states: {
-    "Draw, with icons and shortcuts": () => (
+    "Modules, with icons and shortcuts": () => (
       <OnTheBar>
-        <DrawMenu />
+        <ModuleMenu />
       </OnTheBar>
     ),
     "Settings, without icons": () => (

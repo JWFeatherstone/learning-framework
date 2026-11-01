@@ -2,7 +2,7 @@ import { useEffect, useRef, type FocusEvent, type KeyboardEvent, type ReactNode 
 import styles from "./Toolbar.module.css"
 
 interface Props {
-  /** Names the toolbar for screen readers, such as "Map tools". */
+  /** Names the toolbar for screen readers, such as "Course tools". */
   label: string
   /** Icon buttons, with separators between groups. */
   children: ReactNode

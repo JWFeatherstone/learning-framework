@@ -6,7 +6,7 @@
   animation: fade var(--duration-base) var(--ease-standard);
 }
 
-/* Solid, unlike chrome over the map: what is in a modal is read closely, not glanced at. One row of
+/* Solid and on its own layer: what is in a modal is read closely, not glanced at. One row of
    chrome on top (title, tools, close), the contents below. */
 .dialog {
   --chrome: var(--space-12);

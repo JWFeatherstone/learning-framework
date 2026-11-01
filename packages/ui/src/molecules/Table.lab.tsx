@@ -12,16 +12,21 @@ interface Item {
 }
 
 const ITEMS: Item[] = [
-  { id: "a", name: "Population density", group: "Population", year: "2024" },
-  { id: "b", name: "Median household income", group: "Income", year: "2024" },
-  { id: "c", name: "Jobs", group: "Jobs", year: "2022" },
-  { id: "d", name: "Asking rents", group: "Housing costs", year: "2026", locked: true },
-  { id: "e", name: "Stops", group: "Transit", year: "2026" },
+  {
+    id: "a",
+    name: "The Origins of the Second World War in Asia and the Pacific",
+    group: "Book",
+    year: "1987",
+  },
+  { id: "b", name: "Report of the Commission of Enquiry (Lytton)", group: "Primary", year: "1932" },
+  { id: "c", name: "Forgotten Ally", group: "Book", year: "2013" },
+  { id: "d", name: "Japan's Total Empire", group: "Book", year: "1998", locked: true },
+  { id: "e", name: "League of Nations Official Journal, 1931", group: "Primary", year: "1931" },
 ]
 
 const COLUMNS: TableColumn<Item>[] = [
   { key: "name", label: "Name", width: "minmax(0, 1fr)", main: true, text: (item) => item.name },
-  { key: "group", label: "Topic", width: "152px", text: (item) => item.group },
+  { key: "group", label: "Type", width: "152px", text: (item) => item.group },
   { key: "year", label: "Year", width: "48px", align: "end", text: (item) => item.year },
 ]
 
@@ -31,7 +36,7 @@ function Rows({ items }: { items: Item[] }) {
   return (
     <div className={`${styles.sheet} ${styles.tableSheet}`}>
       <Table
-        label="Layers"
+        label="References"
         columns={COLUMNS}
         rows={items}
         rowKey={(item) => item.id}
@@ -41,7 +46,7 @@ function Rows({ items }: { items: Item[] }) {
         }
         isLocked={(item) => item.locked ?? false}
         describe={(item) => `${item.name}, ${item.year}`}
-        empty="Nothing on the map yet. Turn on a layer to add it."
+        empty="No references yet. The first reading will add some."
       />
     </div>
   )

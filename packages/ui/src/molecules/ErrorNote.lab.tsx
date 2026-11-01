@@ -12,6 +12,6 @@ export const lab: LabEntry = {
         <ErrorNote message="These cells couldn't be loaded." onRetry={retry} />
       </div>
     ),
-    "On its own": () => <ErrorNote message="The map's data couldn't be loaded." onRetry={retry} />,
+    "On its own": () => <ErrorNote message="The plan couldn't be read." onRetry={retry} />,
   },
 }

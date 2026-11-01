@@ -16,14 +16,14 @@ export interface NavGroup {
 }
 
 interface Props {
-  /** Names the navigation for screen readers, such as "Data". */
+  /** Names the navigation for screen readers, such as "Topic sections". */
   label: string
   groups: NavGroup[]
   value: string
   onValueChange: (value: string) => void
 }
 
-// A list of places to go within a view, such as the sections of a catalog, in the menus' rows: capital
+// A list of places to go within a view, such as the chapters of a plan, in the menus' rows: capital
 // headers, full-width rows, the current one filled.
 export function NavList({ label, groups, value, onValueChange }: Props) {
   return (

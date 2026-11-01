@@ -4,14 +4,21 @@ import { Text } from "./Text"
 import styles from "./atoms.lab.module.css"
 
 const ORDER: [TypeRole, string][] = [
-  ["display", "Old Town North"],
-  ["title", "Median household income"],
-  ["value-large", "61,250"],
-  ["value", "0.74"],
-  ["strong", "Export selection"],
-  ["body", "Cells within 800 m of a stop"],
-  ["label", "Population"],
-  ["unit", "per km²"],
+  ["display", "The Second World War"],
+  ["heading", "Manchuria, 1931"],
+  ["title", "Origins 1919–1939"],
+  ["prose-lead", "The crisis began with an explosion on a railway line."],
+  [
+    "prose",
+    "The Kwantung Army acted first and Tokyo followed, which is the order the Lytton report struggled to establish.",
+  ],
+  ["value-large", "0.74"],
+  ["value", "4 of 6"],
+  ["strong", "Generate reading"],
+  ["body", "Two objectives at analyse, one at evaluate"],
+  ["label", "Mastery"],
+  ["code", "p1.c1.u1"],
+  ["unit", "min"],
 ]
 
 function Variants() {
@@ -37,7 +44,7 @@ function Tones() {
           <Text variant="label" tone="muted">
             {tone}
           </Text>
-          <Text tone={tone}>Split by area from 3 tracts</Text>
+          <Text tone={tone}>Last studied three days ago</Text>
         </div>
       ))}
     </div>
@@ -48,11 +55,11 @@ function Wrapping() {
   return (
     <div className={`${styles.stack} ${styles.narrow}`}>
       <Text variant="title" as="h3">
-        Share of residents within 15 minutes of a grocery store by transit
+        Was the League of Nations' failure over Manchuria inevitable, or a choice its members made?
       </Text>
       <Text as="p" tone="muted">
-        Counts are summed across the selection; income is weighted by population, and the four cells on the
-        edge count in part.
+        The seminar pushes on this question from the Japanese, Chinese and British positions in turn, and asks
+        you to state each case without endorsing it.
       </Text>
     </div>
   )

@@ -4,7 +4,7 @@ import styles from "./TopBar.module.css"
 interface Props {
   /** At the start: the logo. */
   start: ReactNode
-  /** Centred: the map's tools. */
+  /** Centred: the course tools. */
   middle?: ReactNode
   /** At the end: the account. */
   end?: ReactNode

@@ -39,20 +39,20 @@
   width: var(--size-control-sm);
 }
 
-/* Primary takes the inverse fill. A solid fill shows hover and press by moving towards the ground. */
+/* Primary takes the accent fill. Hover is the accent's hover step; press moves towards the ground. */
 .primary {
-  background: var(--color-inverse);
-  color: var(--color-text-on-inverse);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
 .primary:hover,
 .primary[data-lab-state="hover"] {
-  background: color-mix(in oklab, var(--color-inverse) 85%, var(--color-ground));
+  background: var(--color-accent-hover);
 }
 
 .primary:active,
 .primary[data-lab-state="pressed"] {
-  background: color-mix(in oklab, var(--color-inverse) 75%, var(--color-ground));
+  background: color-mix(in oklab, var(--color-accent) 85%, var(--color-ground));
 }
 
 /* Secondary is a fill with a hairline, which keeps it defined on a dark panel. */
@@ -100,7 +100,7 @@
   color: var(--color-text);
 }
 
-/* A toggle that is on, such as the active map tool, takes the inverse fill. */
+/* A toggle that is on, such as the chosen view in a toolbar, takes the inverse fill. */
 .button[aria-pressed="true"] {
   background: var(--color-inverse);
   color: var(--color-text-on-inverse);

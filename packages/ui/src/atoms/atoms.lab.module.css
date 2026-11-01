@@ -100,7 +100,7 @@
   color: var(--color-text-muted);
 }
 
-/* Tooltip stages: room above for the open tooltips, over a map stand-in and on a panel. */
+/* Tooltip stages: room above for the open tooltips, over a page stand-in and on a panel. */
 .stage {
   display: flex;
   flex-wrap: wrap;
@@ -110,7 +110,7 @@
   border-radius: var(--radius-md);
 }
 
-.mapStage {
+.pageStage {
   background: linear-gradient(120deg, var(--gray-3), var(--gray-5) 45%, var(--gray-6) 70%, var(--gray-4));
 }
 
@@ -193,7 +193,7 @@
   background: var(--color-panel);
 }
 
-/* A corner of the map: bands of the value ramp, with chrome in its bottom-right corner. */
+/* A corner of a page stand-in, with chrome in its bottom-right corner. */
 .corner {
   display: flex;
   align-items: flex-end;

@@ -6,16 +6,15 @@ import styles from "./atoms.lab.module.css"
 const NAMES = Object.keys(ICONS) as IconName[]
 
 const SAMPLE: IconName[] = [
-  "search",
-  "select",
-  "drawPolygon",
-  "catalog",
-  "add",
-  "close",
-  "visible",
-  "table",
-  "download",
-  "locked",
+  "topics",
+  "plan",
+  "reading",
+  "exercise",
+  "test",
+  "complete",
+  "generate",
+  "send",
+  "nav",
 ]
 
 function Catalogue() {
@@ -45,7 +44,7 @@ function Sizes() {
       {(["sm", "md"] as const).map((size) => (
         <div key={size} className={styles.row}>
           <span className={styles.caption}>
-            {size === "sm" ? "16px, in text and controls" : "20px, in the map toolbar"}
+            {size === "sm" ? "16px, in text and controls" : "20px, in module cards and the navigation"}
           </span>
           {SAMPLE.map((name) => (
             <Icon key={name} name={name} size={size} />
@@ -60,13 +59,13 @@ function ColourFollowsText() {
   return (
     <div className={styles.stack}>
       <span className={styles.inline}>
-        <Icon name="locked" /> This export needs you to sign in.
+        <Icon name="complete" /> Reading finished
       </span>
       <span className={`${styles.inline} ${styles.muted}`}>
-        <Icon name="search" /> Search places
+        <Icon name="generate" /> Not generated yet
       </span>
       <span className={`${styles.inline} ${styles.faint}`}>
-        <Icon name="hidden" /> Hidden layer
+        <Icon name="locked" /> Finish the reading first
       </span>
     </div>
   )

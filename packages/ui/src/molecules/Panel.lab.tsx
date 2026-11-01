@@ -16,8 +16,13 @@ function Contents({ height }: { height: number }) {
 function Short() {
   return (
     <TooltipProvider>
-      <div className={styles.map}>
-        <Panel label="Selected cell" title="Population" detail="Cell · 0.74 km²" onClose={close}>
+      <div className={styles.page}>
+        <Panel
+          label="Reference"
+          title="Iriye, The Origins of the Second World War in Asia"
+          detail="Book · verified"
+          onClose={close}
+        >
           <Contents height={160} />
         </Panel>
       </div>
@@ -28,12 +33,12 @@ function Short() {
 function Long() {
   return (
     <TooltipProvider>
-      <div className={styles.map}>
+      <div className={styles.page}>
         <Panel
-          label="Selected area"
-          title="Population"
-          detail="Drawn area · 24 cells · 3.2 km²"
-          closeLabel="Clear selection"
+          label="Session"
+          title="Seminar: was the League's failure inevitable?"
+          detail="Dialogue · 14 turns"
+          closeLabel="Close the session"
           onClose={close}
         >
           <Contents height={720} />

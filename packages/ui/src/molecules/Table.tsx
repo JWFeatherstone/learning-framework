@@ -16,7 +16,7 @@ export interface TableColumn<Row> {
 }
 
 interface Props<Row> {
-  /** Names the rows for screen readers, such as "Layers". */
+  /** Names the rows for screen readers, such as "References". */
   label: string
   columns: TableColumn<Row>[]
   rows: Row[]

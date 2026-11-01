@@ -7,7 +7,7 @@ export interface SegmentedOption {
 }
 
 interface Props {
-  /** Names the choice for screen readers, such as "Divide the map by". */
+  /** Names the choice for screen readers, such as "Show modules as". */
   label: string
   options: SegmentedOption[]
   value: string

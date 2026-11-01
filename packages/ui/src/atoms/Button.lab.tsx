@@ -6,7 +6,7 @@ import { TooltipProvider } from "./TooltipProvider"
 import styles from "./atoms.lab.module.css"
 
 const VARIANTS = ["primary", "secondary", "ghost"] as const
-const LABELS = { primary: "Export", secondary: "Save selection", ghost: "Copy link" }
+const LABELS = { primary: "Generate reading", secondary: "Open outline", ghost: "Comment" }
 const STATES = ["rest", "hover", "pressed", "focus", "disabled", "unavailable", "loading"] as const
 
 function Variants() {
@@ -15,14 +15,14 @@ function Variants() {
       {(["md", "sm"] as const).map((size) => (
         <div key={size} className={styles.row}>
           <span className={styles.caption}>{size === "md" ? "32px" : "24px"}</span>
-          <Button variant="primary" size={size} icon="download">
-            Export
+          <Button variant="primary" size={size} icon="generate">
+            Generate reading
           </Button>
           <Button variant="secondary" size={size}>
-            Save selection
+            Open outline
           </Button>
-          <Button variant="ghost" size={size} icon="copyLink">
-            Copy link
+          <Button variant="ghost" size={size} icon="comment">
+            Comment
           </Button>
         </div>
       ))}
@@ -52,7 +52,7 @@ function States() {
                     variant={variant}
                     data-lab-state={state}
                     disabled={state === "disabled"}
-                    disabledReason={state === "unavailable" ? "Sign in to export" : undefined}
+                    disabledReason={state === "unavailable" ? "Finish the reading first" : undefined}
                     loading={state === "loading"}
                   >
                     {LABELS[variant]}
@@ -74,15 +74,12 @@ function IconOnly() {
   return (
     <div className={`${styles.surface} ${styles.stack}`}>
       <div className={styles.row}>
-        <span className={styles.caption}>Map toolbar, active tool on</span>
+        <span className={styles.caption}>Module toolbar, current module on</span>
         <div className={styles.toolbar}>
-          <IconButton icon="select" label="Inspect a cell" shortcut={["V"]} aria-pressed="true" />
-          <IconButton icon="drawPolygon" label="Draw a polygon" shortcut={["P"]} aria-pressed="false" />
-          <IconButton icon="drawRectangle" label="Draw a rectangle" shortcut={["R"]} aria-pressed="false" />
-          <IconButton icon="drawCircle" label="Draw a circle" shortcut={["C"]} aria-pressed="false" />
-          <IconButton icon="zoomIn" label="Zoom in" shortcut={["+"]} />
-          <IconButton icon="zoomOut" label="Zoom out" shortcut={["−"]} />
-          <IconButton icon="center" label="Centre on the selection" />
+          <IconButton icon="reading" label="Reading" shortcut={["1"]} aria-pressed="true" />
+          <IconButton icon="exercise" label="Exercise" shortcut={["2"]} aria-pressed="false" />
+          <IconButton icon="test" label="Test" shortcut={["3"]} aria-pressed="false" />
+          <IconButton icon="nav" label="Hide the navigation" shortcut={["["]} />
         </div>
       </div>
       <div className={styles.row}>
@@ -100,8 +97,8 @@ function IconOnly() {
       </div>
       <div className={styles.row}>
         <span className={styles.caption}>Secondary and primary</span>
-        <IconButton icon="copyLink" label="Copy link" variant="secondary" />
-        <IconButton icon="download" label="Export" variant="primary" />
+        <IconButton icon="comment" label="Comment" variant="secondary" />
+        <IconButton icon="send" label="Send" variant="primary" />
       </div>
     </div>
   )

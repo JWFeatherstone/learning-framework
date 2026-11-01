@@ -29,7 +29,7 @@ export const COLOR_ROLES = {
   "on-accent": "gray.1",
   focus: "accent.9",
 
-  // Completion and mastery marks. Placeholder: the accent, until the lab decides otherwise.
+  // Completion and mastery marks share the accent; the shell carries no second brand colour.
   progress: "accent.9",
 
   danger: "red.9",
