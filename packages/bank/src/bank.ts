@@ -78,6 +78,7 @@ export interface Bank {
   check(slug: string): Issue[]
   readModule(slug: string, unit: string, kind: ModuleKind): Module | undefined
   readSession(slug: string, id: string): LoadedSession | undefined
+  readReference(slug: string, id: string): { frontmatter: ReferenceFrontmatter; body: string } | undefined
 
   createTopic(topic: Topic, plan: Plan): void
   /** Replaces plan.yaml. With `archive`, the old plan goes to plan.history/ first (revisions only). */
@@ -208,6 +209,12 @@ export function openBank(dir = resolveBankDir()): Bank {
       if (!existsSync(path)) return undefined
       const { frontmatter, body } = splitFrontmatter(readFileSync(path, "utf8"))
       return { frontmatter: ModuleFrontmatter.parse(frontmatter), body }
+    },
+    readReference(slug, id) {
+      const path = at(slug, "references", `${id}.md`)
+      if (!existsSync(path)) return undefined
+      const { frontmatter, body } = splitFrontmatter(readFileSync(path, "utf8"))
+      return { frontmatter: ReferenceFrontmatter.parse(frontmatter), body }
     },
     readSession(slug, id) {
       const root = at(slug, "sessions", id)

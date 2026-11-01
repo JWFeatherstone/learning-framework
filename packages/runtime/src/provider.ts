@@ -7,10 +7,7 @@ export interface Message {
 }
 
 export interface CompleteOptions {
-  model: string
   messages: Message[]
-  /** A JSON Schema the response must satisfy; providers that support structured output use it directly. */
-  schema?: Record<string, unknown>
   maxTokens?: number
 }
 
@@ -20,20 +17,83 @@ export interface Completion {
 }
 
 export interface Provider {
+  name: string
+  model: string
   complete(options: CompleteOptions): Promise<Completion>
   stream(options: CompleteOptions): AsyncIterable<string>
 }
 
-/** Stands in until a provider is chosen (open question 1). Every call fails loudly. */
-export function unconfiguredProvider(): Provider {
-  const fail = () => {
-    throw new Error("No model provider is configured. Set one in @lf/runtime before generating.")
+const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
+
+function split(messages: Message[]) {
+  const system = messages
+    .filter((message) => message.role === "system")
+    .map((message) => message.content)
+    .join("\n\n")
+  const rest = messages.filter((message) => message.role !== "system").map(({ role, content }) => ({ role, content }))
+  return { system, messages: rest }
+}
+
+/** Anthropic's Messages API over fetch. The key is read once and never logged. */
+export function anthropicProvider(apiKey: string, model: string): Provider {
+  const request = (options: CompleteOptions, stream: boolean) =>
+    fetch(ANTHROPIC_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({ model, max_tokens: options.maxTokens ?? 8192, stream, ...split(options.messages) }),
+    })
+
+  const fail = async (response: Response): Promise<never> => {
+    const body = await response.text()
+    throw new Error(`Anthropic ${response.status}: ${body.slice(0, 400)}`)
   }
+
   return {
-    complete: async () => fail(),
-    // eslint-disable-next-line require-yield
-    async *stream() {
-      fail()
+    name: "anthropic",
+    model,
+    async complete(options) {
+      const response = await request(options, false)
+      if (!response.ok) return fail(response)
+      const data = (await response.json()) as {
+        content: { type: string; text?: string }[]
+        usage: { input_tokens: number; output_tokens: number }
+      }
+      return {
+        text: data.content.map((block) => block.text ?? "").join(""),
+        usage: { inputTokens: data.usage.input_tokens, outputTokens: data.usage.output_tokens },
+      }
+    },
+    async *stream(options) {
+      const response = await request(options, true)
+      if (!response.ok || !response.body) return fail(response)
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ""
+      for (;;) {
+        const { value, done } = await reader.read()
+        if (done) return
+        buffer += decoder.decode(value, { stream: true })
+        let boundary = buffer.indexOf("\n\n")
+        while (boundary >= 0) {
+          const event = buffer.slice(0, boundary)
+          buffer = buffer.slice(boundary + 2)
+          const data = event
+            .split("\n")
+            .filter((line) => line.startsWith("data:"))
+            .map((line) => line.slice(5).trim())
+            .join("")
+          if (data) {
+            const parsed = JSON.parse(data) as { type: string; delta?: { type: string; text?: string }; error?: { message: string } }
+            if (parsed.type === "error") throw new Error(parsed.error?.message ?? "stream error")
+            if (parsed.type === "content_block_delta" && parsed.delta?.text) yield parsed.delta.text
+          }
+          boundary = buffer.indexOf("\n\n")
+        }
+      }
     },
   }
 }

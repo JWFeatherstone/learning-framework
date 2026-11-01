@@ -1,5 +1,7 @@
 # Prompts
 
-One Markdown template per runtime job, filled by the runtime and sent with the matching JSON Schema from
-`@lf/contracts`: `questions.md`, `plan.md`, `revise.md`, `reading.md`, `exercise.md`, `test.md`, `tutor.md`,
-`grade.md`, `verify.md`. Pass 2 writes them; module provenance records `<job>@<version>`.
+One Markdown file per runtime job, sent as the system message. The user message carries the job's
+name, its inputs as a ```json block, and for JSON jobs the output schema from `@lf/contracts`. Module
+provenance records `<job>@<version>`; the version is the file's line count, so any edit changes it.
+
+Reference verification has no prompt: it is a human act, recorded from the client or the CLI.

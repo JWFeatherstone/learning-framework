@@ -15,7 +15,8 @@
     "@lf/contracts": "workspace:*",
     "@lf/runtime": "workspace:*",
     "hono": "^4.7.0",
-    "tsx": "^4.20.0"
+    "tsx": "^4.20.0",
+    "zod": "^4.1.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
