@@ -15,3 +15,8 @@
   margin: 0 auto;
   padding: var(--space-8) var(--space-6) var(--space-16);
 }
+
+/* A course fills the viewport; the shell inside scrolls its own page. */
+.course {
+  height: 100dvh;
+}

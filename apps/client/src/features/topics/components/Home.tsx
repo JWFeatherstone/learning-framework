@@ -1,12 +1,15 @@
-import { Text } from "@lf/ui/atoms/Text"
+import { Button } from "@lf/ui/atoms/Button"
 import { Tag } from "@lf/ui/atoms/Tag"
+import { Text } from "@lf/ui/atoms/Text"
 import { ErrorNote } from "@lf/ui/molecules/ErrorNote"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useApi, type TopicSummary } from "@data/api"
 import styles from "./topics.module.css"
 
+// The bank's topics, one row each. The only other thing to do here is start a new one.
 export function Home() {
   const topics = useApi<TopicSummary[]>("/topics")
+  const navigate = useNavigate()
   return (
     <section className={styles.stack}>
       <Text variant="heading" as="h1">
@@ -17,7 +20,16 @@ export function Home() {
         <ErrorNote message={`Couldn't read the bank: ${topics.error.message}`} onRetry={topics.retry} />
       )}
       {topics.state === "ready" && topics.value.length === 0 && (
-        <Text tone="muted">No topics yet. Create one with `lf topic new` until the wizard exists.</Text>
+        <div className={styles.stackTight}>
+          <Text as="p" tone="muted">
+            No topics yet.
+          </Text>
+          <div>
+            <Button variant="primary" icon="add" onClick={() => navigate("/new")}>
+              New topic
+            </Button>
+          </div>
+        </div>
       )}
       {topics.state === "ready" && (
         <ul className={styles.list}>

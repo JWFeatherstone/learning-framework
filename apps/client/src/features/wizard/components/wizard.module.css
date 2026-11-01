@@ -1,0 +1,71 @@
+.wizard {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.head {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.head h1,
+.head p {
+  margin: 0;
+}
+
+.fields {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.fields p {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+}
+
+.planHead {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.planHead h2 {
+  margin: 0;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* The plan as an outline: parts, chapters, units, objectives, each level indented one step. */
+.tree {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+.tree .tree {
+  margin-top: var(--space-2);
+}
+
+.units {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-5);
+}
+
+.objectives {
+  display: grid;
+  gap: var(--space-1);
+  margin: var(--space-1) 0 0;
+  padding-left: var(--space-4);
+}
