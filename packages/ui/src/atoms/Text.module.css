@@ -1,0 +1,58 @@
+.text {
+  margin: 0;
+}
+
+.display {
+  font: var(--type-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.title {
+  font: var(--type-title);
+  letter-spacing: var(--tracking-title);
+}
+
+.value-large {
+  font: var(--type-value-large);
+  letter-spacing: var(--tracking-value-large);
+}
+
+.value {
+  font: var(--type-value);
+  letter-spacing: var(--tracking-value);
+}
+
+.body {
+  font: var(--type-body);
+  letter-spacing: var(--tracking-body);
+}
+
+.strong {
+  font: var(--type-strong);
+  letter-spacing: var(--tracking-strong);
+}
+
+.label {
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+}
+
+/* Set in capitals, so it reads as a header over a group rather than as one of its items. */
+.overline {
+  font: var(--type-overline);
+  letter-spacing: var(--tracking-overline);
+  text-transform: uppercase;
+}
+
+.unit {
+  font: var(--type-unit);
+  letter-spacing: var(--tracking-unit);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.faint {
+  color: var(--color-text-faint);
+}

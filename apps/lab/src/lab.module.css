@@ -1,0 +1,215 @@
+/* The lab's own chrome. Deliberately plain and independent of the project's tokens. */
+.lab {
+  --lab-ink: #1f2328;
+  --lab-muted: #6e7681;
+  --lab-line: #e4e6ea;
+  --lab-bg: #fafafa;
+  --lab-current: #eceef2;
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  font:
+    13px/1.45 system-ui,
+    -apple-system,
+    sans-serif;
+  color: var(--lab-ink);
+  background: var(--lab-bg);
+}
+
+/* The nav and the canvas each scroll on their own, so no browser has to reconcile sticky and page scroll. */
+.nav {
+  overflow-y: auto;
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding: 16px 12px;
+  border-right: 1px solid var(--lab-line);
+}
+
+.brand {
+  margin: 0;
+  font-weight: 600;
+}
+
+.level {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lab-muted);
+}
+
+.list {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.link:hover,
+.link[aria-current="page"] {
+  background: var(--lab-current);
+}
+
+.link[aria-current="page"] {
+  font-weight: 600;
+}
+
+.canvas {
+  min-width: 0;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.entry {
+  display: grid;
+  gap: 28px;
+}
+
+.entryHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.entryHead h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.badge {
+  padding: 0 8px;
+  border: 1px solid var(--lab-line);
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--lab-muted);
+}
+
+.path {
+  font-size: 12px;
+  color: var(--lab-muted);
+}
+
+.specimen {
+  display: grid;
+  gap: 8px;
+}
+
+.stateName {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lab-muted);
+}
+
+.frames,
+.framesStacked {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.framesStacked {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.frame {
+  position: relative;
+  min-width: 0;
+  padding: 28px 20px 20px;
+  border: 1px solid var(--lab-line);
+  border-radius: 8px;
+}
+
+.frame::before {
+  content: attr(data-theme);
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font:
+    11px system-ui,
+    sans-serif;
+  opacity: 0.5;
+}
+
+.tokens {
+  border-collapse: collapse;
+}
+
+.tokens td {
+  padding: 4px 16px 4px 0;
+  vertical-align: middle;
+}
+
+.tokens code {
+  white-space: nowrap;
+}
+
+.swatch {
+  display: block;
+  width: 40px;
+  height: 24px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.bar {
+  display: block;
+  height: 10px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+.corner {
+  display: block;
+  width: 36px;
+  height: 24px;
+  border: 1.5px solid currentColor;
+  opacity: 0.6;
+}
+
+.resolved {
+  opacity: 0.65;
+}
+
+.strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 2px;
+}
+
+.stripItem {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+}
+
+.stripSwatch {
+  width: 100%;
+  height: 32px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.stripLabel {
+  font:
+    11px system-ui,
+    sans-serif;
+  opacity: 0.55;
+}

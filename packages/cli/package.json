@@ -1,0 +1,22 @@
+{
+  "name": "@lf/cli",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "bin": {
+    "lf": "./bin/lf.js"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@lf/bank": "workspace:*",
+    "@lf/contracts": "workspace:*",
+    "@lf/runtime": "workspace:*",
+    "tsx": "^4.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "~6.0.3"
+  }
+}

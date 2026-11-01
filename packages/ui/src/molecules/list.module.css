@@ -1,0 +1,147 @@
+/* The list that menus and selects open: raised, 28px rows that run the full width, and groups with a
+   header in capitals and a hairline between them. Each row: an icon if the list has them, the label,
+   then whatever ends it (a shortcut, a lock, a tick). */
+
+.content {
+  z-index: var(--layer-popover);
+  min-width: 200px;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-raised);
+  box-shadow: var(--shadow-raised);
+}
+
+.viewport {
+  padding: var(--space-1) 0;
+}
+
+/* The hairline between groups is inset to the text; the rows under it still run the full width. */
+.group + .group {
+  position: relative;
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
+}
+
+.group + .group::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: var(--space-3);
+  left: var(--space-3);
+  border-top: 1px solid var(--color-line);
+}
+
+.groupLabel {
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  font: var(--type-overline);
+  letter-spacing: var(--tracking-overline);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--size-row);
+  padding: 0 var(--space-3);
+  outline: none;
+  color: var(--color-text);
+  font: var(--type-body);
+  letter-spacing: var(--tracking-body);
+  cursor: pointer;
+  user-select: none;
+}
+
+.item > svg {
+  flex: none;
+  color: var(--color-text-muted);
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+  padding-right: var(--space-4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.end {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+/* Highlighted follows the pointer and the arrow keys alike. */
+.item[data-highlighted] {
+  background: var(--color-fill-hover);
+}
+
+.item[data-highlighted] > svg {
+  color: var(--color-text);
+}
+
+/* Disabled, as an option that needs sign-in is: faint throughout, and passed over by the arrow keys. */
+.item[data-disabled] {
+  color: var(--color-text-faint);
+  cursor: not-allowed;
+}
+
+.item[data-disabled] > svg,
+.item[data-disabled] .end {
+  color: inherit;
+}
+
+.indicator {
+  display: flex;
+  color: var(--color-text);
+}
+
+.keys {
+  font: var(--type-label);
+  letter-spacing: 0.04em;
+}
+
+/* A menu's header: who or what it belongs to, above its rows. */
+.header {
+  display: grid;
+  padding: var(--space-2) var(--space-3);
+}
+
+.headerTitle {
+  font: var(--type-strong);
+  letter-spacing: var(--tracking-strong);
+  color: var(--color-text);
+}
+
+.headerDetail {
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  color: var(--color-text-muted);
+}
+
+/* Chevrons at the top and bottom while the list has more that way. */
+.scroll {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--size-control-sm);
+  color: var(--color-text-muted);
+  cursor: default;
+}
+
+.up > svg {
+  transform: rotate(180deg);
+}
+
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

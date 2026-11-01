@@ -1,0 +1,45 @@
+/* A filled track; the chosen segment rises out of it as a raised surface with a hairline. Control
+   selection is neutral: colour means focus only. */
+.track {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--radius-md);
+  background: var(--color-fill);
+}
+
+.segment {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.segment:hover {
+  color: var(--color-text);
+}
+
+.segment:has(.input:checked) {
+  background: var(--color-raised);
+  box-shadow: 0 0 0 1px var(--color-line);
+  color: var(--color-text);
+}
+
+.segment:has(.input:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* The radio itself is there for keys and screen readers, not to be seen. */
+.input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}

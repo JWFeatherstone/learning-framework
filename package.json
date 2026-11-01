@@ -1,0 +1,23 @@
+{
+  "name": "learning-framework",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "packageManager": "pnpm@12.16.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter @lf/server --filter @lf/client run dev",
+    "lab": "pnpm --filter @lf/lab run dev",
+    "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm -r run test",
+    "build": "pnpm -r run build",
+    "check": "node packages/cli/bin/lf.js check",
+    "lf": "node packages/cli/bin/lf.js",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10"
+  }
+}

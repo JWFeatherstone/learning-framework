@@ -1,0 +1,126 @@
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  BookOpen,
+  ChartLine,
+  Check,
+  CircleCheck,
+  ClipboardCheck,
+  ChevronDown,
+  ChevronRight,
+  CircleAlert,
+  CircleHelp,
+  CircleUser,
+  Download,
+  Eye,
+  EyeOff,
+  Info,
+  Layers,
+  Link,
+  LocateFixed,
+  Library,
+  Lock,
+  LogIn,
+  LogOut,
+  Maximize2,
+  MessageCircle,
+  MessagesSquare,
+  Minimize2,
+  Minus,
+  Moon,
+  MousePointer2,
+  Pencil,
+  Pin,
+  PinOff,
+  Plus,
+  Radius,
+  Redo2,
+  Search,
+  Settings,
+  Sparkles,
+  Sun,
+  Table2,
+  Trash2,
+  TriangleAlert,
+  Type,
+  Undo2,
+  VectorPolygon,
+  VectorSquare,
+  X,
+  type LucideIcon,
+} from "lucide-react"
+
+export const ICON_GROUPS = ["Course", "Map", "Actions", "Views", "Disclosure", "Status", "Account"] as const
+
+interface IconSpec {
+  glyph: LucideIcon
+  group: (typeof ICON_GROUPS)[number]
+  use: string
+}
+
+// Every icon the app uses, named for what it means. The Map group is inherited from flux-explorer and
+// still feeds the lab specimens; prune it once those are rewritten. One meaning has one glyph; a glyph may serve two
+// meanings in different places, as plus adds and zooms in. This is the only module that imports Lucide.
+export const ICONS = {
+  topics: { glyph: Library, group: "Course", use: "All topics" },
+  reading: { glyph: BookOpen, group: "Course", use: "A unit's reading" },
+  exercise: { glyph: MessagesSquare, group: "Course", use: "A unit's exercise: a dialogue or a task" },
+  test: { glyph: ClipboardCheck, group: "Course", use: "A unit's test" },
+  complete: { glyph: CircleCheck, group: "Course", use: "A module or unit the learner has finished" },
+  generate: { glyph: Sparkles, group: "Course", use: "Generate a planned module" },
+  back: { glyph: ArrowLeft, group: "Course", use: "Back to the outline" },
+
+  select: { glyph: MousePointer2, group: "Map", use: "Pick a cell or feature; shift-click to add more" },
+  drawPolygon: { glyph: VectorPolygon, group: "Map", use: "Select the cells inside a drawn polygon" },
+  drawRectangle: { glyph: VectorSquare, group: "Map", use: "Select the cells inside a rectangle" },
+  drawCircle: { glyph: Radius, group: "Map", use: "Select the cells within a distance of a point" },
+  zoomIn: { glyph: Plus, group: "Map", use: "Zoom in" },
+  zoomOut: { glyph: Minus, group: "Map", use: "Zoom out" },
+  center: { glyph: LocateFixed, group: "Map", use: "Centre the map on the selection" },
+  catalog: { glyph: Layers, group: "Map", use: "Open the data catalog" },
+  placeNames: { glyph: Type, group: "Map", use: "Show or hide the place names" },
+
+  search: { glyph: Search, group: "Actions", use: "Search places" },
+  add: { glyph: Plus, group: "Actions", use: "Add a layer or an item" },
+  edit: { glyph: Pencil, group: "Actions", use: "Edit or rename" },
+  delete: { glyph: Trash2, group: "Actions", use: "Delete something saved" },
+  close: { glyph: X, group: "Actions", use: "Close a panel or dialog; clear a selection or a field" },
+  download: { glyph: Download, group: "Actions", use: "Export or download data" },
+  comment: { glyph: MessageCircle, group: "Actions", use: "Comment" },
+  pin: { glyph: Pin, group: "Actions", use: "Keep a panel or layer in place" },
+  unpin: { glyph: PinOff, group: "Actions", use: "Release what was pinned" },
+  copyLink: { glyph: Link, group: "Actions", use: "Copy a link to this view" },
+  undo: { glyph: Undo2, group: "Actions", use: "Undo the last change to a selection" },
+  redo: { glyph: Redo2, group: "Actions", use: "Redo it" },
+
+  visible: { glyph: Eye, group: "Views", use: "A layer is shown" },
+  hidden: { glyph: EyeOff, group: "Views", use: "A layer is hidden" },
+  table: { glyph: Table2, group: "Views", use: "Show figures as a table" },
+  chart: { glyph: ChartLine, group: "Views", use: "Show figures as a chart" },
+  expand: { glyph: Maximize2, group: "Views", use: "Enlarge a panel or chart" },
+  collapse: { glyph: Minimize2, group: "Views", use: "Return it to its size" },
+  ascending: { glyph: ArrowUp, group: "Views", use: "A column sorted A to Z, low to high" },
+  descending: { glyph: ArrowDown, group: "Views", use: "A column sorted Z to A, high to low" },
+  settings: { glyph: Settings, group: "Views", use: "Open the settings: theme, place names" },
+  light: { glyph: Sun, group: "Views", use: "Switch to the light theme" },
+  dark: { glyph: Moon, group: "Views", use: "Switch to the dark theme" },
+
+  open: { glyph: ChevronDown, group: "Disclosure", use: "An open section; a dropdown" },
+  closed: { glyph: ChevronRight, group: "Disclosure", use: "A closed section" },
+  chosen: { glyph: Check, group: "Disclosure", use: "The chosen option in a list" },
+
+  increase: { glyph: ArrowUp, group: "Status", use: "A value went up" },
+  decrease: { glyph: ArrowDown, group: "Status", use: "A value went down" },
+  info: { glyph: Info, group: "Status", use: "A note" },
+  warning: { glyph: TriangleAlert, group: "Status", use: "Something needs attention" },
+  error: { glyph: CircleAlert, group: "Status", use: "Something failed" },
+  locked: { glyph: Lock, group: "Status", use: "Needs sign-in" },
+
+  signIn: { glyph: LogIn, group: "Account", use: "Sign in" },
+  signOut: { glyph: LogOut, group: "Account", use: "Sign out" },
+  account: { glyph: CircleUser, group: "Account", use: "Your account" },
+  help: { glyph: CircleHelp, group: "Account", use: "Help" },
+} as const satisfies Record<string, IconSpec>
+
+export type IconName = keyof typeof ICONS

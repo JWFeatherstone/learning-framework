@@ -1,0 +1,25 @@
+.nav {
+  overflow-y: auto;
+}
+
+/* Rows are the shared list's; as buttons they need their defaults cleared. */
+.item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.item:hover {
+  background: var(--color-fill);
+}
+
+.item[aria-current="true"] {
+  background: var(--color-fill-hover);
+  font: var(--type-strong);
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}

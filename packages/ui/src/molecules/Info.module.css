@@ -1,0 +1,20 @@
+/* Glass, like every menu over the map. Focus moves into the note when it opens; the note itself is the
+   indicator, so it draws no ring. */
+.note {
+  z-index: var(--layer-popover);
+  display: grid;
+  gap: var(--space-1);
+  max-width: 280px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-raised);
+  box-shadow: var(--shadow-raised);
+  color: var(--color-text);
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+}
+
+.note:focus {
+  outline: none;
+}

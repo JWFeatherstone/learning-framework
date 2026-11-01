@@ -1,0 +1,5 @@
+/* The list is the shared one (list.module.css); a menu's scrolls within the room it opens into. */
+.content {
+  max-height: var(--radix-dropdown-menu-content-available-height);
+  overflow-y: auto;
+}

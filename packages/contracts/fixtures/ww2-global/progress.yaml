@@ -1,0 +1,6 @@
+units:
+  p1.c1.u1:
+    state: in-progress
+    modules:
+      reading: { state: complete, at: 2026-10-31 }
+mastery: {}

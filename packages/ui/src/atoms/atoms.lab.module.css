@@ -1,0 +1,211 @@
+/* Layout for the atoms' lab entries. Specimens sit on a panel, where they will live. */
+
+.surface {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+}
+
+.stack {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.caption {
+  margin: 0;
+  font: var(--type-label);
+  color: var(--color-text-muted);
+}
+
+.row > .caption:first-child {
+  width: 200px;
+}
+
+.inline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.faint {
+  color: var(--color-text-faint);
+}
+
+.grid {
+  border-collapse: separate;
+  border-spacing: var(--space-4) var(--space-3);
+  margin: calc(-1 * var(--space-3)) calc(-1 * var(--space-4));
+}
+
+.grid th {
+  font: var(--type-label);
+  color: var(--color-text-muted);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.grid td {
+  vertical-align: middle;
+}
+
+.toolbar {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+  box-shadow: var(--shadow-raised);
+}
+
+.iconGroup {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-3) var(--space-4);
+}
+
+.iconCell {
+  display: grid;
+  grid-template-columns: var(--size-icon-md) minmax(0, 1fr);
+  align-items: center;
+  gap: 2px var(--space-2);
+}
+
+.iconName {
+  font: var(--type-strong);
+}
+
+.iconUse {
+  grid-column: 2;
+  font: var(--type-label);
+  color: var(--color-text-muted);
+}
+
+/* Tooltip stages: room above for the open tooltips, over a map stand-in and on a panel. */
+.stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-6) var(--space-6);
+  border-radius: var(--radius-md);
+}
+
+.mapStage {
+  background: linear-gradient(120deg, var(--gray-3), var(--gray-5) 45%, var(--gray-6) 70%, var(--gray-4));
+}
+
+.panelStage {
+  justify-content: space-around;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+}
+
+/* Readouts */
+.pairs {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-3) var(--space-4);
+}
+
+.narrow {
+  max-width: 280px;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  max-width: 360px;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-line);
+}
+
+.metricCell {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-panel);
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.sideBySide {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.twoColumns {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  align-items: start;
+  gap: var(--space-3) var(--space-6);
+}
+
+/* Text fields */
+.fields {
+  max-width: 320px;
+  gap: var(--space-5);
+}
+
+.fieldCell {
+  width: 280px;
+}
+
+/* A strip of the top bar: its height, its colour, its line. */
+.logoBar {
+  display: flex;
+  align-items: center;
+  width: 420px;
+  height: var(--space-12);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+}
+
+/* A corner of the map: bands of the value ramp, with chrome in its bottom-right corner. */
+.corner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  height: 96px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: repeating-linear-gradient(
+    120deg,
+    var(--gray-3) 0 40px,
+    var(--gray-5) 40px 80px,
+    var(--gray-6) 80px 120px,
+    var(--gray-4) 120px 160px
+  );
+}

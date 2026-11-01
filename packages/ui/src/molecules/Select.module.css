@@ -1,0 +1,47 @@
+/* The trigger reads as a title: strong type, no border. It sits 8px left of where its text starts, so
+   the text lines up with whatever is above or below it. */
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: var(--size-control-md);
+  margin-left: calc(-1 * var(--space-2));
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  font: var(--type-strong);
+  letter-spacing: var(--tracking-strong);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.trigger:hover,
+.trigger[data-lab-state="hover"] {
+  background: var(--color-fill-hover);
+}
+
+.trigger[data-state="open"],
+.trigger[data-lab-state="open"] {
+  background: var(--color-fill-active);
+}
+
+.trigger:focus-visible,
+.trigger[data-lab-state="focus"] {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.chevron {
+  display: flex;
+  color: var(--color-text-muted);
+}
+
+/* The list is the shared menu list (list.module.css); a select's is at least as wide as its trigger and
+   scrolls within the room below it. */
+.content {
+  min-width: max(var(--radix-select-trigger-width), 200px);
+  max-height: var(--radix-select-content-available-height);
+}

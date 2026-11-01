@@ -1,0 +1,147 @@
+.groups {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.groupName {
+  margin: 0 0 var(--space-2);
+  font: var(--type-label);
+  color: var(--color-text-muted);
+}
+
+.typeRow {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.roleName,
+.spec {
+  font: var(--type-label);
+  color: var(--color-text-muted);
+}
+
+.spec {
+  color: var(--color-text-faint);
+}
+
+.card {
+  width: 320px;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-panel);
+}
+
+.head {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.eyebrow {
+  margin: 0;
+  font: var(--type-label);
+  color: var(--color-text-muted);
+}
+
+.display {
+  margin: 0;
+  font: var(--type-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.tags {
+  display: flex;
+  gap: var(--space-1);
+  margin: var(--space-2) 0 0;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--size-control-sm);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-fill);
+  font: var(--type-label);
+}
+
+.marker {
+  width: 6px;
+  height: 6px;
+  background: var(--color-progress);
+}
+
+/* Hairlines between cells come from the line colour showing through a 1px gap. */
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  border-block: 1px solid var(--color-line);
+  background: var(--color-line);
+}
+
+.metric {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-panel);
+}
+
+.metric[data-selected] {
+  background: var(--color-accent-subtle);
+  box-shadow: inset 0 0 0 1px var(--color-accent-line);
+}
+
+.metricLabel {
+  font: var(--type-label);
+  color: var(--color-text-muted);
+}
+
+.metricValue {
+  font: var(--type-value-large);
+  letter-spacing: var(--tracking-value-large);
+}
+
+.unit {
+  margin-left: var(--space-1);
+  font: var(--type-unit);
+  color: var(--color-text-muted);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+
+.facts dt {
+  font: var(--type-label);
+  color: var(--color-text-muted);
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.mapStandIn {
+  padding: var(--space-8);
+  border-radius: var(--radius-md);
+  background: var(--color-fill-active);
+}
+
+.floating {
+  width: 220px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-raised);
+  box-shadow: var(--shadow-raised);
+}

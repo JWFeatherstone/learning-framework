@@ -1,0 +1,24 @@
+{
+  "name": "@lf/server",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "build": "tsc --noEmit -p .",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.0",
+    "@lf/bank": "workspace:*",
+    "@lf/contracts": "workspace:*",
+    "@lf/runtime": "workspace:*",
+    "hono": "^4.7.0",
+    "tsx": "^4.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "~6.0.3"
+  }
+}

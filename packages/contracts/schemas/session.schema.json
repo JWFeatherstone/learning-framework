@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["exercise", "test"]
+    },
+    "unit": {
+      "type": "string",
+      "pattern": "^(p\\d+\\.)?c\\d+\\.u\\d+$"
+    },
+    "module": {
+      "type": "string",
+      "enum": ["reading", "exercise", "test"]
+    },
+    "planVersion": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "startedAt": {
+      "type": "string"
+    },
+    "endedAt": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "outcome": {
+      "type": "string"
+    }
+  },
+  "required": ["id", "kind", "unit", "module", "planVersion", "startedAt"]
+}

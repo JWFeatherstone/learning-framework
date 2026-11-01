@@ -1,0 +1,11 @@
+/* 16px label line plus 2px above and below: 20px, on the grid. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-fill);
+  color: var(--color-text);
+  white-space: nowrap;
+}

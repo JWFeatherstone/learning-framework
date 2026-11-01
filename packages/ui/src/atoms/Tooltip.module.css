@@ -1,0 +1,42 @@
+/* Contrasting: the inverse fill, so a tooltip reads as an annotation, never as part of what it sits on. */
+.tooltip {
+  z-index: var(--layer-tooltip);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 240px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-inverse);
+  color: var(--color-text-on-inverse);
+  font: var(--type-body);
+  user-select: none;
+}
+
+.tooltip[data-state="delayed-open"] {
+  animation: appear var(--duration-fast) var(--ease-standard);
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+}
+
+.keys {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.key {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--color-text-on-inverse) 18%, transparent);
+  font: var(--type-label);
+}

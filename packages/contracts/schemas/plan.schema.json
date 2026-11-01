@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "topic": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "contractsVersion": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "shape": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nodes": {
+      "anyOf": [
+        {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^p\\d+$"
+              },
+              "kind": {
+                "type": "string",
+                "const": "part"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "children": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^(p\\d+\\.)?c\\d+$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "const": "chapter"
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "children": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^(p\\d+\\.)?c\\d+\\.u\\d+$"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "const": "unit"
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "estimate": {
+                            "type": "string"
+                          },
+                          "prerequisites": {
+                            "default": [],
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "pattern": "^(p\\d+\\.)?c\\d+\\.u\\d+$"
+                            }
+                          },
+                          "objectives": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^obj\\.[a-z0-9][a-z0-9.-]*$"
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "level": {
+                                  "type": "string",
+                                  "enum": ["recall", "explain", "analyse", "evaluate", "create"]
+                                }
+                              },
+                              "required": ["id", "text", "level"]
+                            }
+                          },
+                          "modules": {
+                            "type": "object",
+                            "properties": {
+                              "reading": {
+                                "type": "object",
+                                "properties": {
+                                  "state": {
+                                    "type": "string",
+                                    "enum": ["planned", "generating", "generated", "stale"]
+                                  },
+                                  "approach": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": ["state"]
+                              },
+                              "exercise": {
+                                "type": "object",
+                                "properties": {
+                                  "state": {
+                                    "type": "string",
+                                    "enum": ["planned", "generating", "generated", "stale"]
+                                  },
+                                  "approach": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": ["state"]
+                              },
+                              "test": {
+                                "type": "object",
+                                "properties": {
+                                  "state": {
+                                    "type": "string",
+                                    "enum": ["planned", "generating", "generated", "stale"]
+                                  },
+                                  "approach": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": ["state"]
+                              }
+                            },
+                            "required": ["reading", "exercise", "test"],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": ["id", "kind", "title", "objectives", "modules"]
+                      }
+                    }
+                  },
+                  "required": ["id", "kind", "title", "children"]
+                }
+              }
+            },
+            "required": ["id", "kind", "title", "children"]
+          }
+        },
+        {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^(p\\d+\\.)?c\\d+$"
+              },
+              "kind": {
+                "type": "string",
+                "const": "chapter"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "children": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^(p\\d+\\.)?c\\d+\\.u\\d+$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "const": "unit"
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "estimate": {
+                      "type": "string"
+                    },
+                    "prerequisites": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^(p\\d+\\.)?c\\d+\\.u\\d+$"
+                      }
+                    },
+                    "objectives": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^obj\\.[a-z0-9][a-z0-9.-]*$"
+                          },
+                          "text": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "level": {
+                            "type": "string",
+                            "enum": ["recall", "explain", "analyse", "evaluate", "create"]
+                          }
+                        },
+                        "required": ["id", "text", "level"]
+                      }
+                    },
+                    "modules": {
+                      "type": "object",
+                      "properties": {
+                        "reading": {
+                          "type": "object",
+                          "properties": {
+                            "state": {
+                              "type": "string",
+                              "enum": ["planned", "generating", "generated", "stale"]
+                            },
+                            "approach": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["state"]
+                        },
+                        "exercise": {
+                          "type": "object",
+                          "properties": {
+                            "state": {
+                              "type": "string",
+                              "enum": ["planned", "generating", "generated", "stale"]
+                            },
+                            "approach": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["state"]
+                        },
+                        "test": {
+                          "type": "object",
+                          "properties": {
+                            "state": {
+                              "type": "string",
+                              "enum": ["planned", "generating", "generated", "stale"]
+                            },
+                            "approach": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["state"]
+                        }
+                      },
+                      "required": ["reading", "exercise", "test"],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": ["id", "kind", "title", "objectives", "modules"]
+                }
+              }
+            },
+            "required": ["id", "kind", "title", "children"]
+          }
+        }
+      ]
+    }
+  },
+  "required": ["version", "topic", "contractsVersion", "title", "shape", "rationale", "nodes"]
+}

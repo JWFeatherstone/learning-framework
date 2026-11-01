@@ -1,0 +1,18 @@
+id: ww2-global
+title: The Second World War from more than one side
+created: 2026-10-31
+contractsVersion: 1
+learner:
+  goals: >
+    A global, multi-perspective framing of the war: the same years seen from Asian, Soviet, colonial
+    and Western vantage points, with attention to how each side understood its own choices.
+  prior: >
+    British school curriculum: causes, the Western European theatre, key events. Little on the Pacific,
+    the Soviet-German war or the colonial world.
+  hoursPerWeek: 3.5
+  preferences: Chronological; primary sources where possible.
+models:
+  plan: placeholder/strong
+  generate: placeholder/strong
+  tutor: placeholder/mid
+  grade: placeholder/strong

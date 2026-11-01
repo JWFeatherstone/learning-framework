@@ -1,0 +1,46 @@
+version: 1
+topic: ww2-global
+contractsVersion: 1
+title: The Second World War from more than one side
+shape: chronological-by-theatre
+rationale: >
+  A chronological spine, with each period split by theatre so the learner meets the same years from
+  Asian, Soviet, colonial and Western vantage points. This fixture holds the first chapter only.
+nodes:
+  - id: p1
+    kind: part
+    title: Origins, 1919-1939
+    children:
+      - id: p1.c1
+        kind: chapter
+        title: Asia
+        children:
+          - id: p1.c1.u1
+            kind: unit
+            title: Manchuria and the end of the Washington order
+            estimate: 2h
+            prerequisites: []
+            objectives:
+              - id: obj.manchuria.causes
+                text: Explain why Japan moved on Manchuria in 1931 from Japanese, Chinese and League perspectives.
+                level: analyse
+              - id: obj.manchuria.league
+                text: Assess what the League's response did and did not show about collective security.
+                level: evaluate
+            modules:
+              reading: { state: generated, approach: perspectives }
+              exercise: { state: generated, approach: seminar }
+              test: { state: generated, approach: mixed paper }
+          - id: p1.c1.u2
+            kind: unit
+            title: From Shanghai to the Marco Polo Bridge, 1932-1937
+            estimate: 2h
+            prerequisites: [p1.c1.u1]
+            objectives:
+              - id: obj.china.escalation
+                text: Trace how local incidents became a general war, and who chose escalation at each step.
+                level: analyse
+            modules:
+              reading: { state: planned }
+              exercise: { state: planned }
+              test: { state: planned }

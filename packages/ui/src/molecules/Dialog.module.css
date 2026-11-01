@@ -1,0 +1,94 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-modal);
+  background: var(--color-scrim);
+  animation: fade var(--duration-base) var(--ease-standard);
+}
+
+/* Solid, unlike chrome over the map: what is in a modal is read closely, not glanced at. One row of
+   chrome on top (title, tools, close), the contents below. */
+.dialog {
+  --chrome: var(--space-12);
+  --sidebar: 208px;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: var(--layer-modal);
+  display: grid;
+  grid-template: var(--chrome) minmax(0, 1fr) / auto minmax(0, 1fr);
+  height: min(640px, 100vh - 2 * var(--space-6));
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-raised);
+  box-shadow: var(--shadow-raised);
+  transform: translate(-50%, -50%);
+  animation: fade var(--duration-base) var(--ease-standard);
+}
+
+.wide {
+  width: min(880px, 100vw - 2 * var(--space-6));
+}
+
+.narrow {
+  width: min(560px, 100vw - 2 * var(--space-6));
+}
+
+.dialog:focus {
+  outline: none;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--color-line);
+  font: var(--type-title);
+  letter-spacing: var(--tracking-title);
+  color: var(--color-text);
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: 0 var(--space-2);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.tools > :first-child:not(:last-child) {
+  flex: 1;
+}
+
+.body {
+  display: flex;
+  grid-column: 1 / -1;
+  min-height: 0;
+}
+
+/* With a sidebar, the title sits over it at its width, and one rule runs from top to bottom. */
+.split .title,
+.split .sidebar {
+  width: var(--sidebar);
+  border-right: 1px solid var(--color-line);
+}
+
+.split .sidebar {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.split .body {
+  grid-column: 2;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}

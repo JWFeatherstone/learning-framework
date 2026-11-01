@@ -1,0 +1,17 @@
+.shell {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100dvh;
+}
+
+.wordmark {
+  color: inherit;
+  text-decoration: none;
+}
+
+.main {
+  width: 100%;
+  max-width: calc(var(--measure-prose) + 2 * var(--space-6));
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6) var(--space-16);
+}
