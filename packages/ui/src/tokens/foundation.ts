@@ -1,6 +1,6 @@
 import type { Theme } from "./palette"
 
-// Placeholders until the lab picks a reading face; FAMILY is the one place a typeface changes.
+// The system stacks, decided 2026-10-31; FAMILY is the one place a typeface changes.
 export const FAMILY = {
   sans: "system-ui, -apple-system, sans-serif",
   mono: "ui-monospace, SFMono-Regular, Menlo, monospace",
