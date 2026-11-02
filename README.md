@@ -19,24 +19,23 @@ Open http://localhost:5173 and start a new topic. Topics are saved as files in `
 
 ## Choose a provider
 
-Set these in `.env.local`. `corepack pnpm lf provider` tells you what is selected.
+Pick one and put it in `.env.local`. `corepack pnpm lf provider` shows what is selected.
 
-- **Nothing set: the fake provider.** Every screen works, but the plans, readings and feedback are
-  placeholder text. Good for a look around, not for learning.
-- **`LF_AUTHOR=claude-code`: if you use Claude Code.** Plans and courses are written by `claude`
-  running headless and signed in as you, on your own subscription, with no API key. It reads any
-  sources you give a topic and the web, but never writes. The seminar tutor and the grader still use
-  the provider below, so they stay fake without a key. `cursor` works the same way through
-  `cursor-agent`.
-- **`ANTHROPIC_API_KEY`: everything real.** Billed per use through the Anthropic API. Together with
-  `LF_AUTHOR`, the harness writes the course and the key powers the tutor and the grader.
+- **Claude Code**: `LF_AUTHOR=claude-code`. Uses your Claude subscription through `claude`, which
+  must be installed and signed in; no API key. It plans, writes and grades the course, reading any
+  sources you give a topic and the web, never writing. The seminar tutor is not on it yet, so
+  seminars give placeholder replies. (`LF_AUTHOR=cursor` does the same through `cursor-agent`.)
+- **Anthropic API**: `ANTHROPIC_API_KEY=…`. Everything real, including the tutor, billed per use.
 
-| Variable            | Meaning                                                                                   |
-| ------------------- | ----------------------------------------------------------------------------------------- |
-| `ANTHROPIC_API_KEY` | Enables the Anthropic adapter. Without it the deterministic fake provider runs            |
-| `LF_PROVIDER`       | `anthropic` or `fake`; default `anthropic` when a key is present, else `fake`             |
-| `LF_MODEL`          | Model id for the real adapter; default in `packages/runtime/src/env.ts` (`DEFAULT_MODEL`) |
-| `LF_AUTHOR`         | `claude-code` or `cursor`: plan, generate and revise with that harness, run headless and signed in as you (`claude` or `cursor-agent` on the PATH). Claude Code gets only its file-reading and web tools; Cursor runs in ask mode. Unset, they use the provider above |
-| `LF_PLAN_MODEL`     | With `LF_AUTHOR`: the model that plans and revises, such as `opus`. Unset, the harness's default |
-| `LF_WRITE_MODEL`    | With `LF_AUTHOR`: the model that writes modules, such as `sonnet`. Most of the usage is here. Unset, the harness's default |
-| `BANK_DIR`          | Where topics live; default `bank/` at the repo root                                       |
+With neither, the app runs on placeholder text: fine for a look around, not for learning.
+
+Optional:
+
+| Variable         | Meaning                                                                          |
+| ---------------- | -------------------------------------------------------------------------------- |
+| `LF_PLAN_MODEL`  | Claude Code: the model that plans, grades and revises, such as `opus`             |
+| `LF_WRITE_MODEL` | Claude Code: the model that writes modules, such as `sonnet`; most of the usage   |
+| `LF_MODEL`       | API: the model; default `claude-opus-5-5`                                         |
+| `BANK_DIR`       | Where topics live; default `bank/` at the repo root                               |
+
+Working on the code: start with `CLAUDE.md`.
