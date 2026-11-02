@@ -92,9 +92,9 @@ export interface Runtime {
 type ModuleProgress = NonNullable<NonNullable<Progress["units"][string]>["modules"]["reading"]>
 
 interface Options {
-  /** The live provider: the tutor and the grader. */
+  /** The live provider: the tutor. */
   provider?: Provider
-  /** The planning jobs' provider: plan, revise. Defaults to `provider`. */
+  /** The planning jobs' provider: plan, revise, grade. Defaults to `provider`. */
   author?: Provider
   /** The module-writing jobs' provider: generate. Defaults to `author`. */
   writer?: Provider
@@ -137,15 +137,15 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
   const by = options.by ?? "server"
 
   /** Asks for JSON and validates it; one more try with the validation errors if the first reply fails.
-      Grading is live, like the tutor; writing modules goes to the writer; the rest plans the course and
-      goes to the author. */
+      Writing modules goes to the writer; the rest plans, grades and revises the course and goes to the
+      author. */
   async function ask<T>(
     job: Job,
     inputs: unknown,
     schema: z.ZodType<T>,
     run: Run & { sources?: string[] } = {},
   ): Promise<{ value: T; prompt: string; cost: Provenance["cost"]; model: string; session?: string }> {
-    const via = job === "grade" ? provider : job.startsWith("generate.") ? writer : author
+    const via = job.startsWith("generate.") ? writer : author
     const rendered = render(job, inputs, schema)
     const messages = asMessages(rendered)
     let cost = { inputTokens: 0, outputTokens: 0 }

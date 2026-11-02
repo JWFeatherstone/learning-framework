@@ -36,9 +36,9 @@ export function providerFromEnv(env: NodeJS.ProcessEnv = process.env): Provider 
   throw new Error(`Unknown LF_PROVIDER ${choice}; use anthropic or fake`)
 }
 
-/** The provider for the writing jobs. LF_AUTHOR=claude-code|cursor runs that harness headless; unset,
-    they use the live provider that the tutor and the grader use. A harness takes its model per job:
-    LF_PLAN_MODEL for planning and revising (few calls, where the course is decided), LF_WRITE_MODEL for
+/** The provider for the writing and grading jobs. LF_AUTHOR=claude-code|cursor runs that harness headless; unset,
+    they use the live provider that the tutor uses. A harness takes its model per job:
+    LF_PLAN_MODEL for planning, grading and revising (few calls, where the course is decided), LF_WRITE_MODEL for
     writing modules (most of the volume); unset, the harness's own default. */
 export function authorFromEnv(live: Provider, job: "plan" | "write", env: NodeJS.ProcessEnv = process.env): Provider {
   const choice = env.LF_AUTHOR
