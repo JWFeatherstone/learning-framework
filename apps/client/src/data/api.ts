@@ -50,6 +50,16 @@ export interface LoadedSession {
   outcome?: Outcome
 }
 
+/** A chapter the server is writing, or has just failed to write. */
+export interface ChapterJob {
+  chapter: string
+  since: number
+  line: string
+  written: number
+  of: number
+  error?: string
+}
+
 export interface Health {
   provider: string
   model: string
@@ -83,8 +93,38 @@ export const postJson = <T>(path: string, body?: unknown) =>
     body: body === undefined ? undefined : JSON.stringify(body),
   }).then((response) => parse<T>(response))
 
+interface ServerEvent {
+  delta?: string
+  progress?: string
+  error?: string
+  done?: boolean
+  result?: unknown
+}
+
 /** Posts, then yields the text deltas of a server-sent stream until the server says done. */
 export async function* postStream(path: string, body: unknown): AsyncGenerator<string> {
+  for await (const event of events(path, body)) {
+    if (event.error) throw new Error(event.error)
+    if (event.delta) yield event.delta
+    if (event.done) return
+  }
+}
+
+/** Posts a long writing job, reporting each line of progress, and resolves with the result it ends on. */
+export async function postPlanning<T>(
+  path: string,
+  body: unknown,
+  onProgress: (line: string) => void,
+): Promise<T> {
+  for await (const event of events(path, body)) {
+    if (event.error) throw new Error(event.error)
+    if (event.progress) onProgress(event.progress)
+    if (event.done) return event.result as T
+  }
+  throw new Error("The server ended the stream without a result")
+}
+
+async function* events(path: string, body: unknown): AsyncGenerator<ServerEvent> {
   const response = await fetch(`/api${path}`, {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -107,12 +147,7 @@ export async function* postStream(path: string, body: unknown): AsyncGenerator<s
         .filter((line) => line.startsWith("data:"))
         .map((line) => line.slice(5).trimStart())
         .join("\n")
-      if (data) {
-        const parsed = JSON.parse(data) as { delta?: string; error?: string; done?: boolean }
-        if (parsed.error) throw new Error(parsed.error)
-        if (parsed.delta) yield parsed.delta
-        if (parsed.done) return
-      }
+      if (data) yield JSON.parse(data) as ServerEvent
       boundary = buffer.indexOf("\n\n")
     }
   }
@@ -140,13 +175,16 @@ export function useApi<T>(path: string): Resource<T> {
 }
 
 export const api = {
-  questions: (intake: Intake) => postJson<{ questions: IntakeQuestion[] }>("/wizard/questions", { intake }),
-  propose: (intake: Intake, answers: IntakeAnswer[], previous?: PlanOutput, comments?: string) =>
-    postJson<{ plan: PlanOutput }>("/wizard/propose", { intake, answers, previous, comments }),
+  questions: (body: { intake: Intake; session?: string }, onProgress: (line: string) => void) =>
+    postPlanning<{ questions: IntakeQuestion[]; session?: string }>("/wizard/questions", body, onProgress),
+  propose: (
+    body: { intake: Intake; answers: IntakeAnswer[]; previous?: PlanOutput; comments?: string; session?: string },
+    onProgress: (line: string) => void,
+  ) => postPlanning<{ plan: PlanOutput; session?: string }>("/wizard/propose", body, onProgress),
   createTopic: (intake: Intake, answers: IntakeAnswer[], plan: PlanOutput) =>
     postJson<{ id: string }>("/topics", { intake, answers, plan }),
-  generate: (slug: string, unit: string, kind: string) =>
-    postJson<{ module: Module; issues: Issue[] }>(`/topics/${slug}/modules/${unit}/${kind}/generate`),
+  generateChapter: (slug: string, chapter: string) => postJson<ChapterJob>(`/topics/${slug}/chapters/${chapter}/generate`),
+  generation: (slug: string) => getJson<ChapterJob | null>(`/topics/${slug}/generation`),
   markComplete: (slug: string, unit: string, module: string) =>
     postJson<Progress>(`/topics/${slug}/progress`, { unit, module, state: "complete" }),
   startSession: (slug: string, unit: string) => postJson<LoadedSession>(`/topics/${slug}/units/${unit}/sessions`),

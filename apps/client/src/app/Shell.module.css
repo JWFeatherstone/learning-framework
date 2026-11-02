@@ -5,15 +5,26 @@
 }
 
 .wordmark {
+  flex: none;
   color: inherit;
   text-decoration: none;
 }
 
+/* A long topic title gives way before the wordmark does. */
+.topic {
+  min-width: 0;
+}
+
+.topicTitle {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .main {
   width: 100%;
-  max-width: calc(var(--measure-prose) + 2 * var(--space-6));
-  margin: 0 auto;
-  padding: var(--space-8) var(--space-6) var(--space-16);
+  padding: var(--space-8) var(--size-gutter) var(--space-16);
+  container-type: inline-size;
 }
 
 /* A course fills the viewport; the shell inside scrolls its own page. */

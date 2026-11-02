@@ -1,7 +1,7 @@
 import type { ModuleKind, Unit } from "@lf/contracts"
+import { Icon } from "@lf/ui/atoms/Icon"
 import { Tag } from "@lf/ui/atoms/Tag"
 import { Text } from "@lf/ui/atoms/Text"
-import type { ReactNode } from "react"
 import { Link } from "react-router"
 import { useCourse } from "./Course"
 import styles from "./course.module.css"
@@ -11,23 +11,36 @@ const LABEL: Record<ModuleKind, string> = { reading: "Reading", exercise: "Exerc
 interface Props {
   unit: Unit
   kind: ModuleKind
-  tags?: ReactNode
+  /** One fact after the module's name, such as "about 2.5h" or "8 questions". */
+  detail?: string
+  /** The plan version the module was written for; said only when the plan has moved on. */
+  planVersion: number
 }
 
-// Where a module sits: the topic, its unit, then the module; and the module's facts as tags.
-export function ModuleHead({ unit, kind, tags }: Props) {
-  const { slug, detail } = useCourse()
+// What the learner is in: the module and one fact about it, then the unit's title as the page's heading,
+// a link back to the unit. A module written for an older plan says so.
+export function ModuleHead({ unit, kind, detail, planVersion }: Props) {
+  const { slug, detail: course } = useCourse()
+  const current = course.plan.version
   return (
-    <header className={styles.stackTight}>
-      <div className={styles.crumbs}>
-        <Link to={`/t/${slug}`}>{detail.topic.title}</Link>
-        <Text variant="label">›</Text>
-        <Link to={`/t/${slug}/u/${unit.id}`}>{unit.title}</Link>
-      </div>
-      <Text variant="heading" as="h1">
+    <header className={styles.moduleHead}>
+      <Text variant="label" tone="muted" as="p" className={styles.moduleKind}>
+        <Icon name={kind} size="sm" />
         {LABEL[kind]}
+        {detail && `, ${detail}`}
       </Text>
-      {tags && <div className={styles.meta}>{tags}</div>}
+      <Text variant="display" as="h1" className={styles.unitTitle}>
+        <Link to={`/t/${slug}/u/${unit.id}`} className={styles.titleLink}>
+          {unit.title}
+        </Link>
+      </Text>
+      {planVersion < current && (
+        <div className={styles.meta}>
+          <Tag>
+            Written for plan v{planVersion}; the plan is now v{current}
+          </Tag>
+        </div>
+      )}
     </header>
   )
 }
@@ -43,15 +56,5 @@ export function NotGenerated({ unit, kind }: { unit: Unit; kind: ModuleKind }) {
       </Link>{" "}
       to generate it.
     </Text>
-  )
-}
-
-/** Marks tags shared by every module: approach and plan version. */
-export function moduleTags(approach: string, planVersion: number, current: number) {
-  return (
-    <>
-      <Tag>{approach}</Tag>
-      <Tag>{planVersion === current ? `plan v${planVersion}` : `plan v${planVersion}, now v${current}`}</Tag>
-    </>
   )
 }

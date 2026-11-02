@@ -29,7 +29,7 @@ export function ReferencesView() {
   }
 
   return (
-    <article className={styles.stack}>
+    <article className={`${styles.stack} ${styles.document}`}>
       <header className={styles.stackTight}>
         <Text variant="heading" as="h1">
           References

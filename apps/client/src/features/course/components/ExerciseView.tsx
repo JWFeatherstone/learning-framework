@@ -2,15 +2,17 @@ import type { Outcome } from "@lf/contracts"
 import { Button } from "@lf/ui/atoms/Button"
 import { Text } from "@lf/ui/atoms/Text"
 import { ErrorNote } from "@lf/ui/molecules/ErrorNote"
+import { ObjectiveList } from "@lf/ui/molecules/ObjectiveList"
 import { Prose } from "@lf/ui/molecules/Prose"
 import { Transcript, type Turn } from "@lf/ui/molecules/Transcript"
+import { DocumentFrame } from "@lf/ui/templates/DocumentFrame"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { api, getJson, useApi, type LoadedSession, type Module, type ProposedRevision } from "@data/api"
 import { findUnit } from "../nav"
 import { refResolver, section } from "../refs"
 import { useCourse } from "./Course"
-import { ModuleHead, NotGenerated, moduleTags } from "./ModuleHead"
+import { ModuleHead, NotGenerated } from "./ModuleHead"
 import { OutcomeView } from "./OutcomeView"
 import styles from "./course.module.css"
 
@@ -98,12 +100,24 @@ export function ExerciseView() {
       reload()
     })
 
+  const side = (
+    <section className={styles.sideGroup}>
+      <Text variant="strong" as="h2">
+        What the tutor will probe
+      </Text>
+      <ObjectiveList
+        objectives={unit.objectives.map((objective) => ({ ...objective, mastery: detail.progress.mastery[objective.id]?.value }))}
+      />
+    </section>
+  )
+
   return (
-    <article className={styles.stack}>
+    <DocumentFrame side={side} sideLabel="Objectives">
+    <article className={`${styles.stack} ${styles.document}`}>
       <ModuleHead
         unit={unit}
         kind="exercise"
-        tags={moduleTags(frontmatter.approach, frontmatter.planVersion, detail.plan.version)}
+        planVersion={frontmatter.planVersion}
       />
 
       {!sessionId && (
@@ -135,5 +149,6 @@ export function ExerciseView() {
 
       {result && <OutcomeView outcome={result.outcome} revision={result.revision} />}
     </article>
+    </DocumentFrame>
   )
 }

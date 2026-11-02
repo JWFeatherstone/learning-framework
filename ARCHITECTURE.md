@@ -37,13 +37,15 @@ topic the way CI validates a repository. `.index.sqlite` beside the topics is de
 ## The runtime
 
 One function per job in `@lf/runtime`: `plan.questions`, `plan.propose`, `plan.create`, `plan.revise`,
-`plan.accept`, `plan.reject`, `generate`, `tutor.start | turn | end`, `grade.attempt`, `progress.set`,
+`plan.accept`, `plan.reject`, `generate`, `generateChapter`, `tutor.start | turn | end`, `grade.attempt`, `progress.set`,
 `references.setVerification`. Each renders its prompt from `prompts/<job>.md` with its inputs as JSON,
 calls the provider, validates the reply against `@lf/contracts` (one retry with the validation errors),
 and writes through the bank. Provenance on every generated file records the model, the prompt version
 and the inputs.
 
 - The provider seam is `Provider { complete, stream }`. `anthropicProvider` talks to the Messages API over fetch; `fakeProvider` is deterministic and needs no key, so the whole loop runs on any machine and in tests.
+- The client writes a chapter at a time: `generateChapter` writes each module the chapter still needs, in reading order, in one conversation with the author, so the units build on each other and a harness reads the sources once. Not the whole course: revisions would leave modules written ahead of them stale. The server runs the job in the background, one per topic, and the page follows it by polling `GET /topics/:slug/generation`, so a refresh or a second tab finds it; a server restart ends it, and its unfinished modules read as not written.
+- The writing jobs (`plan.*`, `generate`, `plan.revise`) go to the author: the same provider, or with `LF_AUTHOR` an agent harness run headless (`claudeCodeProvider`, `cursorProvider` in `harness.ts`). A harness reads the learner's sources (and, for Claude Code, the web) without writing, and replies through the same seam, resuming one conversation across the wizard's steps; the runtime still validates and writes. Planning and module writing can take different models (`LF_PLAN_MODEL`, `LF_WRITE_MODEL`): a few calls decide the course, most of the volume writes it. The tutor and the grader stay on the live provider.
 - Reference verification is a human act with no prompt.
 - The server and the CLI call the same functions; neither writes a file itself.
 
@@ -54,7 +56,7 @@ and the inputs.
 | `app/`                   | The router, the bar, the two shells (plain, and the course shell with the navigation rail)       |
 | `data/api.ts`            | `Resource<T>`, `useApi`, the typed calls, the SSE reader                                          |
 | `features/topics/`       | The list of topics                                                                               |
-| `features/wizard/`       | New topic: intake, questions, proposed plan, confirm                                             |
+| `features/wizard/`       | New topic: intake, questions, proposed plan beside the conversation about it, confirm            |
 | `features/course/`       | A topic: home, unit page, reading, exercise (seminar), test, references, revisions               |
 
 A feature never imports another feature. Organisms take what they show as props where the lab needs to
@@ -76,12 +78,17 @@ uses it. The lab finds `*.lab.tsx` entries by file name.
 | Button, icon button, Tag, Text, TextField, Textarea, ProgressBar, StateMark, Avatar, Skeleton, Spinner | Atom | Our own |
 | Tooltip      | Atom     | Radix Tooltip                                                                 |
 | Select, Menu, Dialog | Molecule | Radix; overlays, the only raised surfaces                               |
-| Segmented, TopBar, ErrorNote, Callout, ChoiceGroup | Molecule | Our own                                     |
-| CourseNav    | Molecule | Our own: the plan tree with a state mark and progress per unit                |
-| Prose        | Molecule | Our own: Markdown to type roles, `[[kind:id]]` links resolved by the caller   |
+| Segmented, TopBar, ErrorNote, Callout, ChoiceGroup, Working | Molecule | Our own                            |
+| CourseNav    | Molecule | Our own: the plan tree, one chapter open, a state mark and estimate per unit  |
+| PlanOutline  | Molecule | Our own: the plan to scan, with hours per chapter and objectives folded       |
+| Prose        | Molecule | Our own: Markdown to type roles, `[[kind:id]]` links resolved by the caller; tables and the six blocks (`MODULE_BLOCKS`), terms gathered into a glossary |
+| ReadingProgress | Molecule | Our own: a map of a long text, sections at their true positions on a line that fills as it is read, with the time left; a bar when narrow |
 | Transcript   | Molecule | Our own: streamed turns and a composer                                        |
 | ModuleRow, ObjectiveList, RevisionList | Molecule | Our own: rows with hairlines in the page, never boxes   |
-| CourseShell  | Template | Our own: bar, collapsible rail, page column at the prose measure              |
+| ModuleTrack  | Molecule | Our own: a unit's modules as steps on a line that fills as they finish        |
+| CourseShell  | Template | Our own: bar, collapsible rail, the page between the bar's margins            |
+| Columns      | Template | Our own: the page's content and its second column, stacked when narrow       |
+| DocumentFrame | Template | Our own: a module page; the document centred, a full-height column of chrome down the right |
 
 ## Files and types
 

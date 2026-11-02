@@ -8,11 +8,15 @@
   gap: var(--space-3);
 }
 
-.stack h1,
-.stack h2,
-.stack h3,
-.stack p {
+/* The page's own headings and lines only: a module's Prose keeps the spacing it sets itself. */
+.stack > :is(h1, h2, h3, p),
+.stackTight > :is(h1, h2, h3, p) {
   margin: 0;
+}
+
+/* A module, a transcript, a test: one column at the reading measure, whatever the page's width. */
+.document {
+  max-width: calc(var(--measure-prose) + var(--space-16));
 }
 
 .crumbs {
@@ -33,13 +37,58 @@
 }
 
 .meta {
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
 }
 
-.modules {
+/* The unit page: one column the page's width, its sections spaced well apart so each reads on its own. */
+.unit {
   display: grid;
+  gap: var(--space-12);
+}
+
+.unit :is(h1, h2, p) {
+  margin: 0;
+}
+
+.unitTitle {
+  max-width: 36ch;
+  text-wrap: balance;
+}
+
+/* Under the track: what stands between the learner and the chapter, hairline above. */
+.write {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-line);
+}
+
+/* Where the unit leads: the whole block is the link, hairline above. */
+.following {
+  display: grid;
+  gap: var(--space-1);
+  justify-items: start;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-line);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.following:hover h2,
+.following:hover > :last-child {
+  color: var(--color-accent-text);
+}
+
+.following:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
 }
 
 .actions {
@@ -141,4 +190,116 @@
   padding-left: var(--space-5);
   display: grid;
   gap: var(--space-1);
+}
+
+/* A module's head: what it is, then the unit's title, which leads back to the unit. */
+.moduleHead {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.moduleHead > * {
+  margin: 0;
+}
+
+.moduleKind {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.titleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.titleLink:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+/* A reading: its map down the right where the frame has a column for it; otherwise a line across the top. */
+.reading {
+  display: grid;
+  gap: var(--space-6);
+  justify-items: center;
+  min-width: 0;
+}
+
+.reading > article {
+  width: 100%;
+}
+
+.mapOnly {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+@container (min-width: 1000px) {
+  .reading > [role="progressbar"] {
+    display: none;
+  }
+}
+
+@container (max-width: 999.98px) {
+  .mapOnly {
+    display: none;
+  }
+}
+
+/* A document page's side column: short titled groups, one above another. */
+.sideGroup {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.sideGroup > * {
+  margin: 0;
+}
+
+/* The test's questions in the side column: a number and a mark each, answered or not. */
+.questions {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.questions a {
+  display: grid;
+  grid-template-columns: var(--space-6) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.questions a:hover {
+  color: var(--color-text);
+}
+
+.questions a[data-answered] {
+  color: var(--color-text);
+}
+
+.questionText {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.questionMark {
+  width: var(--space-2);
+  height: var(--space-2);
+  border: 1.5px solid var(--color-line-strong);
+  border-radius: 50%;
+}
+
+.questions a[data-answered] .questionMark {
+  border-color: var(--color-progress);
+  background: var(--color-progress);
 }

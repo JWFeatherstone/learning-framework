@@ -69,7 +69,7 @@ export function RevisionsView() {
   const ordered = [...detail.revisions].sort((a, b) => b.id.localeCompare(a.id))
 
   return (
-    <article className={styles.stack}>
+    <article className={`${styles.stack} ${styles.document}`}>
       <header className={styles.stackTight}>
         <Text variant="heading" as="h1">
           Revisions
