@@ -5,25 +5,36 @@ exercise (a seminar with a tutor) and a test; what the learner shows in the test
 back into the plan as revisions the learner accepts or rejects. Everything is files in a memory bank;
 the app reads and writes them through one runtime that a server and a CLI both call.
 
-Read `ARCHITECTURE.md` before adding or moving a file and `DESIGN.md` before touching `packages/ui`.
-`CLAUDE.md` holds the working rules.
+## Quick start
 
-## Run
-
-Node 24 (`nvm use`) and pnpm through corepack; nothing is installed globally.
+You need Node 24 (the repo pins it in `.nvmrc`; [nvm](https://github.com/nvm-sh/nvm) is the easy way)
+and git. pnpm comes through corepack, so nothing is installed globally.
 
 ```sh
+git clone https://github.com/JWFeatherstone/learning-framework.git
+cd learning-framework
 nvm use
 corepack pnpm install
+cp .env.example .env.local   # then choose a provider, below
+corepack pnpm dev
 ```
 
-The bank is a separate directory of topics, named by `BANK_DIR`. The sample bank is a sibling repo:
+Open http://localhost:5173 and start a new topic. Topics are saved as files in `bank/` at the repo
+root (gitignored); set `BANK_DIR` to keep them somewhere else.
 
-```sh
-export BANK_DIR=~/Personal/learning-framework-bank
-```
+## Choose a provider
 
-The provider is read from `.env.local` at the repo root (gitignored) or the environment:
+Set these in `.env.local`. `corepack pnpm lf provider` tells you what is selected.
+
+- **Nothing set: the fake provider.** Every screen works, but the plans, readings and feedback are
+  placeholder text. Good for a look around, not for learning.
+- **`LF_AUTHOR=claude-code`: if you use Claude Code.** Plans and courses are written by `claude`
+  running headless and signed in as you, on your own subscription, with no API key. It reads any
+  sources you give a topic and the web, but never writes. The seminar tutor and the grader still use
+  the provider below, so they stay fake without a key. `cursor` works the same way through
+  `cursor-agent`.
+- **`ANTHROPIC_API_KEY`: everything real.** Billed per use through the Anthropic API. Together with
+  `LF_AUTHOR`, the harness writes the course and the key powers the tutor and the grader.
 
 | Variable            | Meaning                                                                                   |
 | ------------------- | ----------------------------------------------------------------------------------------- |
@@ -33,19 +44,7 @@ The provider is read from `.env.local` at the repo root (gitignored) or the envi
 | `LF_AUTHOR`         | `claude-code` or `cursor`: plan, generate and revise with that harness, run headless and signed in as you (`claude` or `cursor-agent` on the PATH). Claude Code gets only its file-reading and web tools; Cursor runs in ask mode. Unset, they use the provider above |
 | `LF_PLAN_MODEL`     | With `LF_AUTHOR`: the model that plans and revises, such as `opus`. Unset, the harness's default |
 | `LF_WRITE_MODEL`    | With `LF_AUTHOR`: the model that writes modules, such as `sonnet`. Most of the usage is here. Unset, the harness's default |
-
-Then:
-
-| Command                 | Does                                                                       |
-| ----------------------- | -------------------------------------------------------------------------- |
-| `corepack pnpm dev`     | Server on :3131 and client on :5173 (the client proxies `/api` to the server) |
-| `corepack pnpm lab`     | The design lab on :5174: every element in every state, light and dark      |
-| `corepack pnpm lf …`    | The CLI: `check`, `topic`, `generate`, `revise`, `revision`, `verify`, `bank index`, `provider` |
-| `corepack pnpm check <topic>` | Validate a topic in the bank against the contracts                    |
-| `corepack pnpm typecheck`, `test`, `build` | What must pass before a commit                             |
-
-To serve the built client from the server alone: `corepack pnpm --filter @lf/client build`, then
-`corepack pnpm --filter @lf/server start` and open http://localhost:3131.
+| `BANK_DIR`          | Where topics live; default `bank/` at the repo root                                       |
 
 ## The loop
 
@@ -72,3 +71,19 @@ packages/runtime     the jobs (plan, generate, tutor, grade, revise), prompts, p
 packages/cli         lf
 packages/ui          tokens, atoms, molecules, templates, and their lab entries
 ```
+
+## Contributing
+
+Read `ARCHITECTURE.md` before adding or moving a file and `DESIGN.md` before touching `packages/ui`.
+`CLAUDE.md` holds the working rules.
+
+| Command                 | Does                                                                       |
+| ----------------------- | -------------------------------------------------------------------------- |
+| `corepack pnpm dev`     | Server on :3131 and client on :5173 (the client proxies `/api` to the server) |
+| `corepack pnpm lab`     | The design lab on :5174: every element in every state, light and dark      |
+| `corepack pnpm lf …`    | The CLI: `check`, `topic`, `generate`, `revise`, `revision`, `verify`, `bank index`, `provider` |
+| `corepack pnpm check <topic>` | Validate a topic in the bank against the contracts                    |
+| `corepack pnpm typecheck`, `test`, `build` | What must pass before a commit                             |
+
+To serve the built client from the server alone: `corepack pnpm --filter @lf/client build`, then
+`corepack pnpm --filter @lf/server start` and open http://localhost:3131.
