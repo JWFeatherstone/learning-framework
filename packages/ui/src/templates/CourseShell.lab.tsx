@@ -15,9 +15,22 @@ import { TopBar } from "../molecules/TopBar"
 import { CourseShell } from "./CourseShell"
 import styles from "./templates.lab.module.css"
 
-const bar = (
+const CHAPTERS = [
+  { id: "c1", title: "Origins 1919–1939", done: 3, of: 3 },
+  { id: "c2", title: "The war in Europe", done: 1, of: 4, current: true },
+  { id: "c3", title: "The Pacific", done: 0, of: 2 },
+  { id: "c4", title: "Home fronts", done: 0, of: 3 },
+  { id: "c5", title: "Endings", done: 0, of: 1 },
+]
+
+const bar = (navOpen: boolean, toggle: () => void) => (
   <TopBar
-    start={<Text variant="strong">Learning Framework</Text>}
+    start={
+      <>
+        <IconButton icon="nav" variant="ghost" label={navOpen ? "Hide the navigation" : "Show the navigation"} shortcut={["["]} aria-expanded={navOpen} onClick={toggle} />
+        <Text variant="strong">Learning Framework</Text>
+      </>
+    }
     end={<IconButton icon="dark" label="Switch to the dark theme" />}
   />
 )
@@ -29,12 +42,10 @@ function UnitPage({ open }: { open: boolean }) {
     <TooltipProvider>
       <div className={styles.frame}>
         <CourseShell
-          bar={bar}
-          title="The Second World War from more than one side"
-          completion={{ done: 1, of: 6 }}
+          bar={bar(navOpen, () => setNavOpen(!navOpen))}
+          chapters={CHAPTERS}
           nav={<CourseNav parts={FIXTURE_PARTS} currentId={current} onSelect={setCurrent} />}
           navOpen={navOpen}
-          onToggleNav={() => setNavOpen(!navOpen)}
         >
           <div className={styles.stack}>
             <Text variant="label" tone="muted">
@@ -84,12 +95,10 @@ function ReadingPage() {
     <TooltipProvider>
       <div className={styles.frame}>
         <CourseShell
-          bar={bar}
-          title="The Second World War from more than one side"
-          completion={{ done: 1, of: 6 }}
+          bar={bar(true, () => undefined)}
+          chapters={CHAPTERS}
           nav={<CourseNav parts={FIXTURE_PARTS} currentId={current} onSelect={setCurrent} />}
           navOpen
-          onToggleNav={() => undefined}
         >
           <div className={styles.stack}>
             <Text variant="label" tone="muted">

@@ -1,54 +1,49 @@
 import type { ReactNode } from "react"
-import { IconButton } from "../atoms/IconButton"
-import { ProgressBar } from "../atoms/ProgressBar"
-import { Text } from "../atoms/Text"
+import { Tooltip } from "../atoms/Tooltip"
 import styles from "./CourseShell.module.css"
 
 interface Props {
-  /** The bar across the top, from the app. */
+  /** The bar across the top, from the app. It holds the rail's toggle at its start. */
   bar: ReactNode
-  /** The topic's title, at the head of the rail. */
-  title: string
-  /** Units finished out of all. Shown as a figure and a bar, never as a streak. */
-  completion: { done: number; of: number }
+  /** The topic's chapters in order, with units finished out of all: drawn as a line along the bar's
+      bottom edge, never a streak. */
+  chapters: { id: string; title: string; done: number; of: number; current?: boolean }[]
   /** The tree, usually a CourseNav. */
   nav: ReactNode
   navOpen: boolean
-  onToggleNav: () => void
   children: ReactNode
 }
 
-// The course layout: a bar, a rail down the left that opens to the outline width and closes to a strip
-// with just the toggle, and the page beside it in a column at the prose measure. The pattern is the
-// one education platforms settled on; nothing here is new on purpose.
-export function CourseShell({ bar, title, completion, nav, navOpen, onToggleNav, children }: Props) {
-  const share = completion.of === 0 ? 0 : completion.done / completion.of
+// The course layout: a bar with the topic's progress along its edge, a rail down the left that opens to
+// the outline width and closes away entirely, and the page beside it. The toggle lives in the bar so it
+// never sits inside what it hides.
+export function CourseShell({ bar, chapters, nav, navOpen, children }: Props) {
+  const done = chapters.reduce((sum, chapter) => sum + chapter.done, 0)
+  const of = chapters.reduce((sum, chapter) => sum + chapter.of, 0)
   return (
     <div className={styles.shell} data-nav={navOpen ? "open" : "closed"}>
       {bar}
+      {/* The course as a line: a segment per chapter, as wide as its units, filled as they finish. The
+          chapter on screen hangs a little lower, so the line also says where you are. */}
+      <div
+        className={styles.progress}
+        role="progressbar"
+        aria-label={`${done} of ${of} units finished`}
+        aria-valuemin={0}
+        aria-valuemax={of}
+        aria-valuenow={done}
+      >
+        {chapters.map((chapter) => (
+          <Tooltip key={chapter.id} label={`${chapter.title}: ${chapter.done} of ${chapter.of}`} side="bottom">
+            <div className={styles.chapter} style={{ flexGrow: chapter.of }} data-current={chapter.current || undefined}>
+              <div className={styles.fill} style={{ width: `${chapter.of === 0 ? 0 : (chapter.done / chapter.of) * 100}%` }} />
+            </div>
+          </Tooltip>
+        ))}
+      </div>
       <div className={styles.body}>
-        <aside className={styles.rail} aria-label="Course navigation">
-          <div className={styles.railHead}>
-            <IconButton
-              icon="nav"
-              label={navOpen ? "Hide the navigation" : "Show the navigation"}
-              shortcut={["["]}
-              aria-pressed={navOpen}
-              onClick={onToggleNav}
-            />
-            {navOpen && (
-              <div className={styles.summary}>
-                <Text variant="strong" as="div" className={styles.title}>
-                  {title}
-                </Text>
-                <Text variant="label" tone="muted">
-                  {completion.done} of {completion.of} units finished
-                </Text>
-                <ProgressBar value={share} label={`${completion.done} of ${completion.of} units finished`} size="sm" />
-              </div>
-            )}
-          </div>
-          {navOpen && <div className={styles.navScroll}>{nav}</div>}
+        <aside className={styles.rail} aria-label="Course navigation" hidden={!navOpen}>
+          <div className={styles.navScroll}>{nav}</div>
         </aside>
         <main className={styles.page}>
           <div className={styles.column}>{children}</div>

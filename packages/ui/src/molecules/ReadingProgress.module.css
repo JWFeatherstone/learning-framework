@@ -1,0 +1,125 @@
+/* The map fills its column: the time left above, then a field whose height stands for the whole text. */
+.map {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-height: 0;
+}
+
+.left {
+  margin: 0;
+  font: var(--type-strong);
+  letter-spacing: var(--tracking-strong);
+  color: var(--color-text);
+}
+
+.field {
+  position: relative;
+  flex: 1;
+  min-height: 240px;
+  cursor: pointer;
+}
+
+/* The line: the text from top to bottom, filled to where the reader is. */
+.track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 2px;
+  background: var(--color-line);
+}
+
+.trackFill {
+  width: 100%;
+  background: var(--color-progress);
+}
+
+/* A tick where each section starts: longer for sections, shorter for subsections. */
+.tick {
+  position: absolute;
+  left: 0;
+  width: 8px;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--color-line-strong);
+}
+
+.tick[data-level="3"] {
+  left: 2px;
+  width: 4px;
+}
+
+.tick[data-passed] {
+  background: var(--color-progress);
+}
+
+.sections {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Labels hang from their ticks; a subsection's name shows only while the reader is in it. */
+.sections li {
+  position: absolute;
+  right: 0;
+  left: var(--space-5);
+  transform: translateY(-50%);
+}
+
+.sections li:not([data-shown]) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.section {
+  display: block;
+  overflow: hidden;
+  font: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.sections li[data-level="2"] .section {
+  font: var(--type-strong);
+  letter-spacing: var(--tracking-strong);
+}
+
+.sections li[data-level="3"] .section {
+  padding-left: var(--space-3);
+}
+
+.section:hover {
+  color: var(--color-text);
+}
+
+.section[aria-current] {
+  color: var(--color-text);
+}
+
+.section:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* As a bar: a line across the top of the page, held there while the text scrolls under it. */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 3px;
+  background: var(--color-line);
+}
+
+.barFill {
+  height: 100%;
+  background: var(--color-progress);
+}

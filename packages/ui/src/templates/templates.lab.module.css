@@ -26,3 +26,21 @@
 .modules {
   margin-bottom: var(--space-8);
 }
+
+/* A course page in miniature: a sized container that scrolls, with the page's named padding. */
+.docStage {
+  height: 560px;
+  max-width: 100%;
+  overflow-y: auto;
+  container-type: size;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-ground);
+}
+
+.docColumn {
+  --page-pad-top: var(--space-8);
+  --page-pad-x: var(--size-gutter);
+  --page-pad-bottom: var(--space-12);
+  padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom);
+}

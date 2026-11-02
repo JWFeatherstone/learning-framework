@@ -1,0 +1,157 @@
+.outline {
+  display: grid;
+  gap: var(--space-10);
+}
+
+.part {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.partTitle {
+  margin: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-line-strong);
+  letter-spacing: var(--tracking-overline);
+  text-transform: uppercase;
+}
+
+.chapter {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.chapterHead {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.chapterHead h3 {
+  flex: 1;
+  margin: 0;
+}
+
+.figure,
+.estimate {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.units {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.unit {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--color-line);
+}
+
+/* A unit the last revision added or changed is marked at its edge and in words, not in colour. */
+.unit[data-change] {
+  margin-left: calc(-1 * var(--space-3));
+  padding-left: calc(var(--space-3) - 2px);
+  border-left: 2px solid var(--color-line-strong);
+}
+
+.unitHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--size-control-sm);
+}
+
+.unitTitle {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.change {
+  font: var(--type-overline);
+  letter-spacing: var(--tracking-overline);
+  text-transform: uppercase;
+}
+
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font: var(--type-body);
+  letter-spacing: var(--tracking-body);
+  text-align: left;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: var(--color-accent-text);
+  text-decoration: underline;
+}
+
+.toggle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--color-text-faint);
+  cursor: pointer;
+}
+
+.toggle:hover {
+  background: var(--color-fill);
+}
+
+.estimate {
+  min-width: var(--space-10);
+  text-align: right;
+}
+
+/* The comment action appears with the row it belongs to, so thirty rows do not show thirty buttons. */
+.comment {
+  opacity: 0;
+}
+
+.chapterHead:hover .comment,
+.unitHead:hover .comment,
+.comment:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .comment {
+    opacity: 1;
+  }
+}
+
+.objectives {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0 0 var(--space-1) var(--space-6);
+  list-style: none;
+}
+
+.objectives li {
+  display: grid;
+  grid-template-columns: var(--space-16) minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.link:focus-visible,
+.toggle:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}

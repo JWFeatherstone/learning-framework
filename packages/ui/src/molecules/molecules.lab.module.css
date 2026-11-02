@@ -54,3 +54,34 @@
   font: var(--type-label);
   color: var(--color-text-muted);
 }
+
+/* A reading in a short window that scrolls, with the rail beside it or the bar above it. */
+.readingFrame {
+  height: 480px;
+  overflow-y: auto;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-ground);
+}
+
+.readingFrame[data-variant="bar"] {
+  max-width: 420px;
+}
+
+.readingGrid {
+  display: grid;
+  gap: var(--space-12);
+  padding: var(--space-6);
+}
+
+.readingFrame[data-variant="map"] .readingGrid {
+  grid-template-columns: minmax(0, 1fr) var(--size-nav);
+}
+
+.readingRail {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-self: start;
+  height: 432px;
+}

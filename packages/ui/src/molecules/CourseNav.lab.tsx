@@ -12,17 +12,17 @@ export const FIXTURE_PARTS: NavPart[] = [
         id: "p1.c1",
         title: "Asia",
         units: [
-          { id: "p1.c1.u1", title: "Manchuria, 1931", state: "assessed", done: 3 },
-          { id: "p1.c1.u2", title: "From Manchuria to Marco Polo Bridge", state: "in-progress", done: 1 },
-          { id: "p1.c1.u3", title: "The war in China, 1937–1941", state: "planned", done: 0 },
+          { id: "p1.c1.u1", title: "Manchuria, 1931", state: "assessed", estimate: "2h" },
+          { id: "p1.c1.u2", title: "From Manchuria to Marco Polo Bridge: the Kwantung Army, Tokyo and the drift to full war", state: "in-progress", estimate: "2.5h" },
+          { id: "p1.c1.u3", title: "The war in China, 1937–1941", state: "planned" },
         ],
       },
       {
         id: "p1.c2",
         title: "Europe",
         units: [
-          { id: "p1.c2.u1", title: "Versailles and its critics", state: "planned", done: 0 },
-          { id: "p1.c2.u2", title: "Appeasement as policy", state: "stale", done: 0 },
+          { id: "p1.c2.u1", title: "Versailles and its critics", state: "planned" },
+          { id: "p1.c2.u2", title: "Appeasement as policy", state: "stale" },
         ],
       },
     ],
@@ -34,7 +34,7 @@ export const FIXTURE_PARTS: NavPart[] = [
       {
         id: "p2.c1",
         title: "Europe and the Atlantic",
-        units: [{ id: "p2.c1.u1", title: "Poland and the phoney war", state: "planned", done: 0 }],
+        units: [{ id: "p2.c1.u1", title: "Poland and the phoney war", state: "planned" }],
       },
     ],
   },
@@ -42,7 +42,7 @@ export const FIXTURE_PARTS: NavPart[] = [
 
 const NO_PARTS: NavPart[] = [{ id: "root", chapters: FIXTURE_PARTS[0]?.chapters ?? [] }]
 
-// Live: open chapters, pick a unit.
+// Live: open a chapter, pick a unit. One chapter is open at a time.
 function WithParts() {
   const [current, setCurrent] = useState("p1.c1.u2")
   return (
@@ -61,8 +61,16 @@ function ChaptersOnly() {
   )
 }
 
+function NoCurrentUnit() {
+  return (
+    <div className={styles.rail}>
+      <CourseNav parts={FIXTURE_PARTS} onSelect={() => undefined} />
+    </div>
+  )
+}
+
 export const lab: LabEntry = {
   name: "CourseNav",
   level: "molecule",
-  states: { "With parts": WithParts, "Chapters only": ChaptersOnly },
+  states: { "With parts": WithParts, "Chapters only": ChaptersOnly, "On the topic's home": NoCurrentUnit },
 }

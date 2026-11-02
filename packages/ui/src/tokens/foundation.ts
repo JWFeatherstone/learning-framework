@@ -48,6 +48,10 @@ export const SIZE = {
   row: 28,
   /** The navigation rail, open. */
   nav: 280,
+  /** The page's second column, beside the content on a wide screen. */
+  aside: 320,
+  /** The side margin the bar and the page share, so the page's content lines up under the bar's. */
+  gutter: 24,
 } as const
 
 /** Line length for running text, in ch. */

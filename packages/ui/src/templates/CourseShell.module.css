@@ -5,6 +5,45 @@
   min-height: 0;
 }
 
+/* Sits over the bar's hairline, so the line itself is the track. The gaps between chapters are the bar's
+   own surface; the current chapter drops below the others like a tab. */
+.progress {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  gap: 2px;
+  height: 3px;
+  margin-top: -1px;
+  overflow: visible;
+  background: var(--color-surface);
+}
+
+.chapter {
+  position: relative;
+  flex-basis: 0;
+  height: 3px;
+  background: var(--color-line-strong);
+}
+
+.chapter[data-current] {
+  height: 6px;
+  background: var(--color-accent-line);
+}
+
+/* A taller target for the tooltip than the line it explains. */
+.chapter::before {
+  position: absolute;
+  inset: -6px 0;
+  content: "";
+}
+
+.fill {
+  height: 100%;
+  background: var(--color-progress);
+}
+
 .body {
   flex: 1;
   display: flex;
@@ -19,30 +58,10 @@
   min-height: 0;
   border-right: 1px solid var(--color-line);
   background: var(--color-surface);
-  transition: width var(--duration-base) var(--ease-standard);
 }
 
-.shell[data-nav="closed"] .rail {
-  width: calc(var(--size-control-md) + var(--space-4));
-}
-
-.railHead {
-  display: grid;
-  gap: var(--space-3);
-  padding: var(--space-2);
-  border-bottom: 1px solid var(--color-line);
-}
-
-.summary {
-  display: grid;
-  gap: var(--space-2);
-  padding: 0 var(--space-2) var(--space-2);
-}
-
-.title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.rail[hidden] {
+  display: none;
 }
 
 .navScroll {
@@ -51,13 +70,23 @@
   overflow-y: auto;
 }
 
+/* The page is a container, so layouts inside it answer to the page's size, not the window's: its width for
+   columns, its height for a column that runs the height of the screen. */
+/* Positioned, so anything absolutely placed inside (a visually hidden input, say) scrolls with the page
+   rather than stretching the window. */
 .page {
+  position: relative;
   flex: 1;
   min-width: 0;
   overflow-y: auto;
+  container-type: size;
 }
 
+/* Between the bar's margins, edge to edge: the content lines up under the bar on both sides. The padding
+   is named, so a frame that runs to the page's edges (DocumentFrame) can reach past it. */
 .column {
-  max-width: calc(var(--measure-prose) + var(--space-16));
-  padding: var(--space-8) var(--space-8) var(--space-24);
+  --page-pad-top: var(--space-8);
+  --page-pad-x: var(--size-gutter);
+  --page-pad-bottom: var(--space-24);
+  padding: var(--page-pad-top) var(--page-pad-x) var(--page-pad-bottom);
 }

@@ -1,0 +1,146 @@
+/* The track answers to its own width: across the page beside nothing, down it in a narrow column. */
+.wrap {
+  container-type: inline-size;
+}
+
+.track {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.rail {
+  display: flex;
+  align-items: center;
+}
+
+/* A ring for every step; its fill says where the step stands. */
+.node {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-control-sm);
+  height: var(--size-control-sm);
+  border: 2px solid var(--color-line-strong);
+  border-radius: 50%;
+  background: var(--color-ground);
+  color: var(--color-on-accent);
+}
+
+/* The line runs from a step to the next; the last step has nowhere to go. */
+.line {
+  flex: 1;
+  margin: 0 var(--space-2);
+  border: 0 solid var(--color-line-strong);
+  border-top-width: 2px;
+}
+
+.step:last-child .line {
+  visibility: hidden;
+}
+
+.step[data-state="unwritten"] :is(.node, .line),
+.step[data-state="writing"] .line {
+  border-style: dashed;
+}
+
+.step[data-state="done"] .node {
+  border-color: var(--color-progress);
+  background: var(--color-progress);
+}
+
+.step[data-state="done"] .line {
+  border-color: var(--color-progress);
+}
+
+.step[data-state="next"] .node,
+.step[data-state="in-progress"] .node {
+  border-color: var(--color-accent);
+}
+
+.step[data-state="next"] .node::after {
+  content: "";
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.step[data-state="in-progress"] .node {
+  background: linear-gradient(90deg, var(--color-progress) 50%, var(--color-ground) 50%);
+}
+
+.body {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
+  padding-right: var(--space-6);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.head h3 {
+  margin: 0;
+  color: var(--color-text);
+}
+
+/* Steps that cannot be opened yet sit back. */
+.step:is([data-state="unwritten"], [data-state="writing"]) .head h3 {
+  color: var(--color-text-muted);
+}
+
+.action {
+  padding-top: var(--space-3);
+}
+
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@container (max-width: 560px) {
+  .track {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .step {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--space-4);
+  }
+
+  .rail {
+    flex-direction: column;
+    align-self: stretch;
+  }
+
+  .line {
+    margin: var(--space-2) 0;
+    border-top-width: 0;
+    border-left-width: 2px;
+  }
+
+  .body {
+    padding: 0 0 var(--space-8);
+  }
+}

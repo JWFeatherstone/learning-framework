@@ -1,4 +1,6 @@
+/* The list is its own container: beside a unit's modules it is narrow, and the mastery drops under the text. */
 .list {
+  container-type: inline-size;
   display: grid;
   gap: var(--space-3);
   margin: 0;
@@ -26,4 +28,11 @@
   display: grid;
   gap: var(--space-2);
   padding-top: 2px;
+}
+
+@container (max-width: 480px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
 }

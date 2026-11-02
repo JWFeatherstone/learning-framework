@@ -1,9 +1,8 @@
 .nav {
   display: grid;
   align-content: start;
-  gap: var(--space-4);
-  padding: var(--space-3) var(--space-2);
-  overflow-y: auto;
+  gap: var(--space-5);
+  padding: var(--space-3) var(--space-2) var(--space-8);
 }
 
 .part {
@@ -12,74 +11,87 @@
 }
 
 .partTitle {
+  margin: 0;
   padding: var(--space-2) var(--space-2) var(--space-1);
   letter-spacing: var(--tracking-overline);
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-text-faint);
 }
 
 .chapter,
 .unit {
   display: flex;
-  align-items: center;
   gap: var(--space-2);
   width: 100%;
   border: 0;
   border-radius: var(--radius-md);
   background: transparent;
-  color: var(--color-text);
   text-align: left;
   cursor: pointer;
 }
 
+/* A closed chapter is a quiet line; the open one and the current unit's read at full strength. */
 .chapter {
-  min-height: var(--size-control-md);
-  padding: 0 var(--space-2);
+  align-items: flex-start;
+  padding: var(--space-2);
+  color: var(--color-text-muted);
   font: var(--type-strong);
   letter-spacing: var(--tracking-strong);
 }
 
-.chapter > svg {
-  flex: none;
-  color: var(--color-text-muted);
+.chapter[aria-expanded="true"],
+.chapter[data-current] {
+  color: var(--color-text);
 }
 
-.chapterTitle {
+.chapter > svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--color-text-faint);
+}
+
+.chapterTitle,
+.unitTitle {
   flex: 1;
   min-width: 0;
 }
 
+.figure {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The open chapter's units hang from a hairline under its chevron. */
 .units {
   display: grid;
   gap: 2px;
-  margin: 0;
-  padding: 0 0 var(--space-1) var(--space-2);
+  margin: 0 0 var(--space-2) var(--space-4);
+  padding: 0 0 0 var(--space-1);
+  border-left: 1px solid var(--color-line);
   list-style: none;
 }
 
 .unit {
   align-items: flex-start;
   padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  color: var(--color-text);
   font: var(--type-body);
   letter-spacing: var(--tracking-body);
 }
 
 /* The mark sits on the first line of the title. */
 .unit > :first-child {
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
-.unitBody {
-  display: grid;
-  flex: 1;
-  gap: var(--space-2);
-  min-width: 0;
-}
-
+/* Two lines, then cut: enough to tell units apart without the row growing a paragraph. */
 .unitTitle {
+  display: -webkit-box;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .chapter:hover,
@@ -90,6 +102,7 @@
 .unit[aria-current="page"] {
   background: var(--color-accent-subtle);
   color: var(--color-accent-text);
+  border-left-color: var(--color-accent);
 }
 
 .chapter:focus-visible,

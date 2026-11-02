@@ -1,0 +1,47 @@
+.frame {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.document {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  min-width: 0;
+}
+
+.document > * {
+  width: 100%;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+/* Side by side, the frame reaches past the page's padding to its edges, so the column meets the bar at
+   the top and the screen at the bottom and right. */
+@container (min-width: 1000px) {
+  .frame {
+    grid-template-columns: minmax(0, 1fr) var(--size-nav);
+    gap: 0;
+    min-height: 100cqh;
+    margin: calc(-1 * var(--page-pad-top, 0px)) calc(-1 * var(--page-pad-x, 0px)) calc(-1 * var(--page-pad-bottom, 0px));
+  }
+
+  .document {
+    padding: var(--page-pad-top, 0px) var(--space-12) var(--page-pad-bottom, 0px);
+  }
+
+  .side {
+    position: sticky;
+    top: 0;
+    height: 100cqh;
+    overflow-y: auto;
+    padding: var(--space-8) var(--space-6);
+    border-left: 1px solid var(--color-line);
+    background: var(--color-surface);
+  }
+}

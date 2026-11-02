@@ -1,0 +1,29 @@
+.columns {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.main,
+.aside {
+  display: grid;
+  align-content: start;
+  gap: var(--space-8);
+  min-width: 0;
+}
+
+/* Beside the content only where both fit: the content at least the reading measure. */
+@container (min-width: 960px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr) var(--size-aside);
+  }
+
+  .aside {
+    position: sticky;
+    top: var(--space-8);
+    align-self: start;
+    max-height: calc(100cqh - var(--space-16));
+    overflow-y: auto;
+    padding-left: var(--space-8);
+    border-left: 1px solid var(--color-line);
+  }
+}
