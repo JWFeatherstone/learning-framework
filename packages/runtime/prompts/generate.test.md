@@ -10,4 +10,7 @@ and a rubric. Mix the types. Four to eight items in all.
 `approach` is one or two words (for example `mixed paper`). `passing` may give a mastery threshold
 between 0 and 1 per objective.
 
+If you have written other modules of this chapter earlier in this conversation, build on them: do not
+repeat what they cover, and keep terms and examples consistent.
+
 Respond with JSON only.

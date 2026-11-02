@@ -59,12 +59,17 @@ export const ModuleFrontmatter = z.discriminatedUnion("kind", [
 ])
 export type ModuleFrontmatter = z.infer<typeof ModuleFrontmatter>
 
-/** Headings each kind's body must carry, in order. A test's items are its body, so it needs none. */
+/** Headings each kind's body must carry, in order. A reading organises itself to suit its subject; a
+    test's items are its body. */
 export const REQUIRED_SECTIONS: Record<ModuleFrontmatter["kind"], string[]> = {
-  reading: ["Framing", "Material", "Perspectives", "Key terms", "Go deeper"],
+  reading: [],
   exercise: ["Brief for the learner", "Brief for the tutor", "Stop conditions"],
   test: [],
 }
+
+/** The fenced blocks a body may use, as `:::name Title` … `:::`. The renderer draws each; the prompts
+    say when to use which. */
+export const MODULE_BLOCKS = ["key", "pitfall", "example", "check", "term", "aside"] as const
 
 /** For a task exercise the tutor brief gives way to the task and its rubric. */
 export const TASK_SECTIONS = ["Brief for the learner", "Task and rubric", "Stop conditions"]

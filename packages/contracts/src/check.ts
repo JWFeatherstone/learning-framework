@@ -1,8 +1,8 @@
 import { parse } from "yaml"
 import type { ZodType } from "zod"
 import { CONTRACTS_VERSION, MODULE_KINDS } from "./ids"
-import { links, sections, splitFrontmatter } from "./markdown"
-import { ModuleFrontmatter, REQUIRED_SECTIONS, TASK_SECTIONS } from "./module"
+import { blockProblems, links, sections, splitFrontmatter } from "./markdown"
+import { MODULE_BLOCKS, ModuleFrontmatter, REQUIRED_SECTIONS, TASK_SECTIONS } from "./module"
 import { Plan, planUnits, type Unit } from "./plan"
 import { ReferenceFrontmatter } from "./reference"
 import { Revision } from "./revision"
@@ -223,6 +223,7 @@ function checkUnitModules(
     for (const section of required) {
       if (!present.includes(section)) out.error(path, `missing section "## ${section}"`)
     }
+    for (const problem of blockProblems(body, MODULE_BLOCKS)) out.error(path, problem)
 
     if (data.kind === "reading") {
       for (const id of data.references) {

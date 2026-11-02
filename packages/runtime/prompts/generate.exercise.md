@@ -8,6 +8,12 @@ seminar starts. The tutor's brief says how to open, what to push on for each obj
 `[[obj:<id>]]`), what a strong turn looks like, and how to behave: no lecturing, short turns, one
 question at a time. Stop conditions say when the seminar ends and what the tutor writes afterwards.
 
+If you can read the learner's sources, put what the tutor needs from them in the tutor's brief; the
+tutor cannot read them.
+
 `form` is `dialogue`. `approach` is one or two words (for example `seminar`, `debate`).
+
+If you have written other modules of this chapter earlier in this conversation, build on them: do not
+repeat what they cover, and keep terms and examples consistent.
 
 Respond with JSON only.

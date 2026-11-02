@@ -36,6 +36,15 @@ describe("check", () => {
     expect(errors(files).map((issue) => issue.message)).toContainEqual(expect.stringContaining("mitter-war"))
   })
 
+  it("refuses an unknown block, a nested block and an unclosed one", () => {
+    const files = { ...fixture }
+    files["modules/p1.c1.u1/reading.md"] += "\n:::poem\nA line.\n:::\n\n:::key\n:::check Inside?\n:::\n\n:::example Never closed\n"
+    const messages = errors(files).map((issue) => issue.message)
+    expect(messages).toContainEqual(expect.stringContaining('unknown block ":::poem"'))
+    expect(messages).toContainEqual(expect.stringContaining("blocks don't nest"))
+    expect(messages).toContainEqual(expect.stringContaining('":::example" is never closed'))
+  })
+
   it("refuses a fourth level and a fourth module kind", () => {
     const files = { ...fixture }
     files["plan.yaml"] = files["plan.yaml"]!.replace(

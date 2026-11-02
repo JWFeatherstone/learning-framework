@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { IntakeQuestion } from "./intake"
-import { EXERCISE_FORMS, TestItem } from "./module"
+import { blockProblems } from "./markdown"
+import { EXERCISE_FORMS, MODULE_BLOCKS, TestItem } from "./module"
 import { Plan } from "./plan"
 import { ACCESS, REFERENCE_TYPES } from "./reference"
 import { Revision } from "./revision"
@@ -34,7 +35,13 @@ export const ReadingOutput = z.object({
   objectives: z.array(ObjectiveId).min(1),
   references: z.array(Slug).default([]),
   newReferences: z.array(NewReference).default([]),
-  body: z.string().min(1),
+  // Checked here as well as by `check`, so a malformed block goes back to the model with the reason.
+  body: z
+    .string()
+    .min(1)
+    .superRefine((body, context) => {
+      for (const problem of blockProblems(body, MODULE_BLOCKS)) context.addIssue({ code: "custom", message: problem })
+    }),
 })
 export type ReadingOutput = z.infer<typeof ReadingOutput>
 

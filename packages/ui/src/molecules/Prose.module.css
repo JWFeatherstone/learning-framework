@@ -6,6 +6,12 @@
   color: var(--color-text);
 }
 
+/* Elements bring no margins of their own (zero specificity, so nothing below has to fight it); the
+   column's rules set every gap between blocks. */
+:where(.prose) :where(p, ul, ol, blockquote, pre, dl, h1, h2, h3, h4) {
+  margin: 0;
+}
+
 .prose > * + * {
   margin-top: var(--space-5);
 }
@@ -14,7 +20,6 @@
 .h2,
 .h3,
 .h4 {
-  margin-bottom: 0;
   color: var(--color-text);
 }
 
@@ -29,6 +34,10 @@
   letter-spacing: var(--tracking-heading);
 }
 
+.prose > :first-child {
+  margin-top: 0;
+}
+
 .prose > .h3 {
   margin-top: var(--space-6);
   font: var(--type-title);
@@ -40,9 +49,9 @@
   letter-spacing: var(--tracking-strong);
 }
 
-.p,
-.lead {
-  margin: 0;
+/* A heading sits closer to what it heads than to what came before. */
+.prose > :is(.h2, .h3, .h4) + * {
+  margin-top: var(--space-3);
 }
 
 .lead {
@@ -51,7 +60,6 @@
 }
 
 .list {
-  margin: 0;
   padding-left: var(--space-6);
 }
 
@@ -60,7 +68,6 @@
 }
 
 .quote {
-  margin: 0;
   padding-left: var(--space-4);
   border-left: 2px solid var(--color-accent-line);
   color: var(--color-text-muted);
@@ -79,7 +86,6 @@
 }
 
 .pre {
-  margin: 0;
   padding: var(--space-3) var(--space-4);
   overflow-x: auto;
   border-radius: var(--radius-md);
@@ -115,4 +121,241 @@
   color: var(--color-danger-text);
   text-decoration: underline dotted;
   text-underline-offset: 3px;
+}
+
+/* Blocks give a reading its rhythm: each stands a little apart from the running text around it. */
+.prose > :is(.key, .pitfall, .example, .check, .aside, .tableWrap),
+.prose > :is(.key, .pitfall, .example, .check, .aside, .tableWrap) + * {
+  margin-top: var(--space-8);
+}
+
+.blockBody > * + * {
+  margin-top: var(--space-3);
+}
+
+
+.label {
+  font: var(--type-overline);
+  letter-spacing: var(--tracking-overline);
+  color: var(--color-text-muted);
+}
+
+.blockHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.blockTitle,
+.keyTitle,
+.check .summaryTitle {
+  font-weight: 600;
+}
+
+/* Tables: hairline rows at the body size, figures in step, scrolling sideways rather than squeezing. */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 100%;
+  border-collapse: collapse;
+  font: var(--type-body);
+  letter-spacing: var(--tracking-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-3);
+  vertical-align: top;
+}
+
+.table th {
+  font: var(--type-strong);
+  vertical-align: bottom;
+  border-bottom: 1px solid var(--color-line-strong);
+}
+
+.table td {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.table :is(th, td):first-child {
+  padding-left: 0;
+}
+
+.table :is(th, td):last-child {
+  padding-right: 0;
+}
+
+/* The idea to keep: larger, hung from a heavy rule in the text colour. */
+.key {
+  padding: var(--space-1) 0 var(--space-1) var(--space-5);
+  border-left: 3px solid var(--color-text);
+  font: var(--type-prose-lead);
+  letter-spacing: var(--tracking-prose-lead);
+}
+
+.keyTitle {
+  margin: 0 0 var(--space-2);
+}
+
+/* A mistake worth naming: the warning colour on its rule and label only. */
+.pitfall {
+  padding-left: var(--space-5);
+  border-left: 2px solid var(--color-warning-text);
+}
+
+.pitfall .label {
+  color: var(--color-warning-text);
+}
+
+.pitfall .blockHead {
+  margin-bottom: var(--space-2);
+}
+
+/* A worked example: ruled off, its numbered steps on a line like the unit's track. */
+.example {
+  padding: var(--space-4) 0 var(--space-2);
+  border-top: 1px solid var(--color-line-strong);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.example .blockHead {
+  margin-bottom: var(--space-4);
+}
+
+.example ol {
+  padding-left: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.example ol > li {
+  position: relative;
+  padding: 0 0 var(--space-5) var(--space-10);
+  counter-increment: step;
+}
+
+.example ol > li + li {
+  margin-top: 0;
+}
+
+.example ol > li::before {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: var(--size-control-sm);
+  height: var(--size-control-sm);
+  border: 2px solid var(--color-line-strong);
+  border-radius: 50%;
+  background: var(--color-ground);
+  font: var(--type-label);
+  font-weight: 600;
+  content: counter(step);
+}
+
+.example ol > li::after {
+  position: absolute;
+  top: calc(var(--size-control-sm) + var(--space-2));
+  bottom: var(--space-1);
+  left: calc(var(--size-control-sm) / 2 - 1px);
+  border-left: 2px solid var(--color-line-strong);
+  content: "";
+}
+
+.example ol > li:last-child::after {
+  display: none;
+}
+
+/* A question to try, and an aside to skip: both folded, between hairlines. */
+.check,
+.aside {
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.summary {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary > svg {
+  flex: none;
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+details[open] > .summary > svg {
+  transform: rotate(90deg);
+}
+
+.summary:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.summaryText {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.aside .summaryTitle {
+  color: var(--color-text-muted);
+}
+
+.check > .blockBody,
+.aside > .blockBody {
+  padding: 0 0 var(--space-5) calc(var(--size-icon-sm) + var(--space-2));
+}
+
+/* A term where it is first used: the word set firm, its definition beneath, a hairline beside. */
+.term {
+  display: grid;
+  gap: var(--space-1);
+  padding-left: var(--space-5);
+  border-left: 1px solid var(--color-line-strong);
+}
+
+.dfn {
+  font-style: normal;
+  font-weight: 600;
+}
+
+.glossary {
+  margin: var(--space-3) 0 0;
+}
+
+.glossary > div {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.glossary dt {
+  font-weight: 600;
+}
+
+.glossary dd {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary > svg {
+    transition: none;
+  }
 }

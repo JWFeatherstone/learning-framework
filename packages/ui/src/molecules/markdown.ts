@@ -17,6 +17,26 @@ export type Block =
   | { type: "quote"; children: Inline[] }
   | { type: "code"; lang: string; text: string }
   | { type: "rule" }
+  | { type: "table"; align: Align[]; head: Inline[][]; rows: Inline[][][] }
+  | { type: "block"; name: BlockName; title: Inline[]; children: Block[] }
+
+export type Align = "left" | "center" | "right"
+
+/** The fenced blocks a module may use, as `:::name Title` … `:::`. Anything else is read as plain text. */
+export const BLOCK_NAMES = ["key", "pitfall", "example", "check", "term", "aside"] as const
+export type BlockName = (typeof BLOCK_NAMES)[number]
+const isBlockName = (name: string): name is BlockName => (BLOCK_NAMES as readonly string[]).includes(name)
+
+/** A table row's cells, without the outer pipes. */
+const cells = (line: string) =>
+  line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim())
+
+const DIVIDER = /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$/
 
 const INLINE = /(\*\*(.+?)\*\*)|(\*(.+?)\*)|(`([^`]+)`)|(\[\[([a-z]+):([^\]\s]+)\]\])|(\[([^\]]+)\]\(([^)\s]+)\))/
 
@@ -60,6 +80,31 @@ export function parseMarkdown(markdown: string): Block[] {
       blocks.push({ type: "code", lang: fence[1] ?? "", text: code.join("\n") })
       continue
     }
+    const open = /^:::([a-z]+)(?: +(.*?))?\s*$/.exec(line)
+    if (open) {
+      flush()
+      const inner: string[] = []
+      i++
+      while (i < lines.length && !/^:::\s*$/.test(lines[i] ?? "")) inner.push(lines[i] ?? ""), i++
+      const name = open[1] ?? ""
+      const children = parseMarkdown(inner.join("\n"))
+      if (isBlockName(name)) blocks.push({ type: "block", name, title: parseInline(open[2] ?? ""), children })
+      else blocks.push(...children)
+      continue
+    }
+    if (line.trimStart().startsWith("|") && DIVIDER.test(lines[i + 1] ?? "")) {
+      flush()
+      const align = cells(lines[i + 1] ?? "").map((cell): Align =>
+        cell.startsWith(":") && cell.endsWith(":") ? "center" : cell.endsWith(":") ? "right" : "left",
+      )
+      const head = cells(line).map(parseInline)
+      const rows: Inline[][][] = []
+      i += 2
+      while (i < lines.length && (lines[i] ?? "").trimStart().startsWith("|")) rows.push(cells(lines[i] ?? "").map(parseInline)), i++
+      i--
+      blocks.push({ type: "table", align, head, rows })
+      continue
+    }
     const heading = /^(#{1,4}) +(.+?)\s*$/.exec(line)
     if (heading) {
       flush()
@@ -96,4 +141,36 @@ export function parseMarkdown(markdown: string): Block[] {
   }
   flush()
   return blocks
+}
+
+/** The text of inline nodes, without their marks. */
+export function plainText(nodes: Inline[]): string {
+  return nodes
+    .map((node) => ("children" in node ? plainText(node.children) : node.type === "ref" ? node.id : node.text))
+    .join("")
+}
+
+/** A heading's anchor: its text, lower-cased, words joined by hyphens. */
+export const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+
+export interface OutlineEntry {
+  id: string
+  title: string
+  level: 2 | 3
+}
+
+/** The sections and subsections of a document, for a contents rail; with the glossary Prose adds when
+    the document defines terms. */
+export function outline(markdown: string, glossary?: string): OutlineEntry[] {
+  const entries = parseMarkdown(markdown).flatMap((block): OutlineEntry[] =>
+    block.type === "heading" && (block.level === 2 || block.level === 3)
+      ? [{ id: slugify(plainText(block.children)), title: plainText(block.children), level: block.level }]
+      : [],
+  )
+  if (glossary && /^:::term\b/m.test(markdown)) entries.push({ id: slugify(glossary), title: glossary, level: 2 })
+  return entries
 }

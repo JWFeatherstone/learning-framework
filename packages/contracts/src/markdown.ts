@@ -19,3 +19,26 @@ export function links(body: string): { kind: string; id: string }[] {
     id: match[2] ?? "",
   }))
 }
+
+/** The fenced blocks in a body, with what is wrong with any: an unknown name, a block opened inside
+    another, or one never closed. Code fences are skipped. */
+export function blockProblems(body: string, known: readonly string[]): string[] {
+  const problems: string[] = []
+  let open: string | undefined
+  let code = false
+  body.split(/\r?\n/).forEach((line, index) => {
+    if (/^```/.test(line)) code = !code
+    if (code) return
+    const start = /^:::([a-z]*)/.exec(line)
+    if (!start) return
+    const name = start[1] ?? ""
+    if (!name) {
+      if (!open) problems.push(`line ${index + 1}: ":::" closes no block`)
+      open = undefined
+    } else if (open) problems.push(`line ${index + 1}: ":::${name}" opens inside ":::${open}"; blocks don't nest`)
+    else if (!known.includes(name)) problems.push(`line ${index + 1}: unknown block ":::${name}"; use ${known.join(", ")}`)
+    else open = name
+  })
+  if (open) problems.push(`":::${open}" is never closed`)
+  return problems
+}

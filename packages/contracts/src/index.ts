@@ -13,12 +13,13 @@ export {
 } from "./outputs"
 export { nextModule, topicCompletion, unitCompletion, unitMastery, unitState } from "./progress"
 export { CONTRACTS_VERSION, MODULE_KINDS, ModuleKind, Provenance, UNIT_ID } from "./ids"
-export { links, sections, splitFrontmatter } from "./markdown"
+export { blockProblems, links, sections, splitFrontmatter } from "./markdown"
 export {
   EXERCISE_FORMS,
   ExerciseFrontmatter,
   ModuleFrontmatter,
   ReadingFrontmatter,
+  MODULE_BLOCKS,
   REQUIRED_SECTIONS,
   TASK_SECTIONS,
   TEST_ITEM_TYPES,
