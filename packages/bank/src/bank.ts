@@ -9,6 +9,7 @@ import {
   writeFileSync,
 } from "node:fs"
 import { dirname, join, relative, resolve } from "node:path"
+import { fileURLToPath } from "node:url"
 import {
   Attempt,
   check,
@@ -98,7 +99,7 @@ export interface Bank {
 
 /** BANK_DIR, or ./bank beside the monorepo root as a fallback for a first run. */
 export function resolveBankDir(env: NodeJS.ProcessEnv = process.env): string {
-  return resolve(env.BANK_DIR ?? "bank")
+  return resolve(env.BANK_DIR ?? fileURLToPath(new URL("../../../bank", import.meta.url)))
 }
 
 const isText = (name: string) => /\.(ya?ml|md)$/.test(name)
