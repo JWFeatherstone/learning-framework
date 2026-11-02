@@ -53,7 +53,7 @@ export function anthropicProvider(apiKey: string, model: string): Provider {
         "x-api-key": apiKey,
         "anthropic-version": "2023-06-01",
       },
-      body: JSON.stringify({ model, max_tokens: options.maxTokens ?? 8192, stream, ...split(options.messages) }),
+      body: JSON.stringify({ model, max_tokens: options.maxTokens ?? 16000, stream, ...split(options.messages) }),
     })
 
   const fail = async (response: Response): Promise<never> => {

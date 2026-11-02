@@ -5,7 +5,7 @@ import { claudeCodeProvider, cursorProvider } from "./harness"
 import { anthropicProvider, type Provider } from "./provider"
 
 /** The model used when LF_MODEL is unset. Check it against Anthropic's current list before relying on it. */
-export const DEFAULT_MODEL = "claude-sonnet-4-5"
+export const DEFAULT_MODEL = "claude-opus-5-5"
 
 /** Loads the nearest .env.local above the working directory, if any. Values never leave process.env. */
 export function loadEnv(from = process.cwd()) {
