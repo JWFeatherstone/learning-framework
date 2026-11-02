@@ -1,14 +1,10 @@
-# Learning Framework
+A framework for structured, agent-guided self-learning. For any topic of interest, the user defines their scope, background, time constraints, and learning preferences, whereupon the agent designs a learning programme consisting of a hierarchy of chapters and units. Each unit is divided into three components: reading (or intake), exercises (or application and internalization), and testing. Each test, seminar or exercise feeds back into the plan as revisions that inform the development of the next chapter and the shape of the programme moving forward.
 
-Structured, agent-guided self-learning. A topic is a plan of units; each unit has a reading, an
-exercise (a seminar with a tutor) and a test; what the learner shows in the test and the seminar feeds
-back into the plan as revisions the learner accepts or rejects. Everything is files in a memory bank;
-the app reads and writes them through one runtime that a server and a CLI both call.
+Everything is files in a memory bank; the app reads and writes them through one runtime that a server and a CLI both call.
 
 ## Quick start
 
-You need Node 24 (the repo pins it in `.nvmrc`; [nvm](https://github.com/nvm-sh/nvm) is the easy way)
-and git. pnpm comes through corepack, so nothing is installed globally.
+You need Node 24 (the repo pins it in `.nvmrc`; [nvm](https://github.com/nvm-sh/nvm) is the easy way) and git. pnpm comes through corepack, so nothing is installed globally.
 
 ```sh
 git clone https://github.com/JWFeatherstone/learning-framework.git
@@ -19,8 +15,7 @@ cp .env.example .env.local   # then choose a provider, below
 corepack pnpm dev
 ```
 
-Open http://localhost:5173 and start a new topic. Topics are saved as files in `bank/` at the repo
-root (gitignored); set `BANK_DIR` to keep them somewhere else.
+Open http://localhost:5173 and start a new topic. Topics are saved as files in `bank/` at the repo root (gitignored); set `BANK_DIR` to keep them somewhere else.
 
 ## Choose a provider
 
@@ -45,45 +40,3 @@ Set these in `.env.local`. `corepack pnpm lf provider` tells you what is selecte
 | `LF_PLAN_MODEL`     | With `LF_AUTHOR`: the model that plans and revises, such as `opus`. Unset, the harness's default |
 | `LF_WRITE_MODEL`    | With `LF_AUTHOR`: the model that writes modules, such as `sonnet`. Most of the usage is here. Unset, the harness's default |
 | `BANK_DIR`          | Where topics live; default `bank/` at the repo root                                       |
-
-## The loop
-
-1. **New topic**: intake → the planner's clarifying questions, with its guesses filled in → a proposed
-   plan to talk back to → confirm. The topic exists only once confirmed (`topic.yaml`, `plan.yaml` v1,
-   `progress.yaml`).
-2. **Unit**: generate the reading, exercise and test on demand; each is a Markdown file with
-   frontmatter under `modules/<unit>/`. `check` validates every file against `@lf/contracts`.
-3. **Reading**: read, mark as read. **Exercise**: a seminar, streamed turn by turn, ended by the
-   learner and graded into an outcome. **Test**: items answered on the page, graded into an outcome.
-4. **Revision**: after a graded session the planner may propose a change to the plan; the learner
-   accepts (plan version bumps, the old plan is archived) or rejects. Nothing changes the plan otherwise.
-5. **References** are verified by a human; a reading may only send the learner to a verified one.
-
-## Layout
-
-```
-apps/client      the universal client (React, react-router, Vite)
-apps/server      Hono over the runtime and the bank; the only process that holds a key
-apps/lab         the design lab
-packages/contracts   zod schemas for every file in the bank, check, revision apply, progress readings
-packages/bank        reads and writes a bank directory; rebuildable SQLite index
-packages/runtime     the jobs (plan, generate, tutor, grade, revise), prompts, provider adapters
-packages/cli         lf
-packages/ui          tokens, atoms, molecules, templates, and their lab entries
-```
-
-## Contributing
-
-Read `ARCHITECTURE.md` before adding or moving a file and `DESIGN.md` before touching `packages/ui`.
-`CLAUDE.md` holds the working rules.
-
-| Command                 | Does                                                                       |
-| ----------------------- | -------------------------------------------------------------------------- |
-| `corepack pnpm dev`     | Server on :3131 and client on :5173 (the client proxies `/api` to the server) |
-| `corepack pnpm lab`     | The design lab on :5174: every element in every state, light and dark      |
-| `corepack pnpm lf …`    | The CLI: `check`, `topic`, `generate`, `revise`, `revision`, `verify`, `bank index`, `provider` |
-| `corepack pnpm check <topic>` | Validate a topic in the bank against the contracts                    |
-| `corepack pnpm typecheck`, `test`, `build` | What must pass before a commit                             |
-
-To serve the built client from the server alone: `corepack pnpm --filter @lf/client build`, then
-`corepack pnpm --filter @lf/server start` and open http://localhost:3131.
