@@ -6,7 +6,11 @@ export const Intake = z.object({
   goals: z.string().min(1),
   prior: z.string().min(1),
   hoursPerWeek: z.number().positive().optional(),
+  /** With hours a week, the time the plan is sized to. */
+  weeks: z.number().int().positive().optional(),
   preferences: z.string().optional(),
+  /** Repositories on this machine (paths) and sites the course should draw on. */
+  sources: z.array(z.string().min(1)).optional(),
 })
 export type Intake = z.infer<typeof Intake>
 

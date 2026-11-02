@@ -9,11 +9,20 @@ export interface Message {
 export interface CompleteOptions {
   messages: Message[]
   maxTokens?: number
+  /** For a harness: the learner's sources (it may read the directories among them), the conversation to
+      resume, and a line per tool call while it works. Other providers ignore these. */
+  sources?: string[]
+  session?: string
+  onProgress?: (line: string) => void
 }
 
 export interface Completion {
   text: string
-  usage: { inputTokens: number; outputTokens: number }
+  usage?: { inputTokens: number; outputTokens: number }
+  /** A harness's conversation, to resume on the next call. */
+  session?: string
+  /** The model that answered, when the provider reports it. */
+  model?: string
 }
 
 export interface Provider {

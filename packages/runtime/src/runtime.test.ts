@@ -4,7 +4,7 @@ import { join } from "node:path"
 import { openBank } from "@lf/bank"
 import { planUnits } from "@lf/contracts"
 import { afterAll, describe, expect, it } from "vitest"
-import { createRuntime } from "./index"
+import { createRuntime, fakeProvider, type Provider } from "./index"
 
 // The whole Phase 0 loop against a temporary bank with the deterministic provider: wizard, confirm,
 // generate, read, seminar, test, grade, revise, accept. Every write goes through the bank; `check`
@@ -29,11 +29,11 @@ describe("the loop", () => {
   let slug = ""
 
   it("asks questions, proposes a plan and creates the topic on confirmation", async () => {
-    const questions = await runtime.plan.questions(intake)
+    const { questions } = await runtime.plan.questions(intake)
     expect(questions.length).toBeGreaterThan(0)
     const answers = questions.map((question) => ({ question: question.question, answer: question.guess }))
-    const first = await runtime.plan.propose({ intake, answers })
-    const second = await runtime.plan.propose({ intake, answers, previous: first, comments: "Add a unit on Sweden." })
+    const { plan: first } = await runtime.plan.propose({ intake, answers })
+    const { plan: second } = await runtime.plan.propose({ intake, answers, previous: first, comments: "Add a unit on Sweden." })
     expect(second.nodes.at(-1)?.children.length).toBe((first.nodes.at(-1)?.children.length ?? 0) + 1)
     expect(bank.listTopics()).toHaveLength(0)
     slug = await runtime.plan.create(intake, answers, second)
@@ -118,5 +118,49 @@ describe("the loop", () => {
     )
     await runtime.references.setVerification(slug, "wedgwood", "verified")
     expect(bank.readReference(slug, "wedgwood")?.frontmatter.verification.state).toBe("verified")
+  })
+
+  it("writes what a chapter still needs, in reading order, and nothing twice", async () => {
+    const chapter = (plan: ReturnType<typeof bank.loadTopic>["plan"]) => planUnits(plan).filter((unit) => unit.id.startsWith("c1."))
+    const needed = chapter(bank.loadTopic(slug).plan).flatMap((unit) =>
+      (["reading", "exercise", "test"] as const).filter((kind) => unit.modules[kind].state !== "generated").map((kind) => `${unit.id}/${kind}`),
+    )
+    const written: string[] = []
+    const result = await runtime.generateChapter(slug, "c1", { onWritten: (unit, kind) => written.push(`${unit}/${kind}`) })
+    expect(written).toEqual(needed)
+    expect(result.written).toBe(needed.length)
+    expect(chapter(bank.loadTopic(slug).plan).every((unit) => Object.values(unit.modules).every((module) => module.state === "generated"))).toBe(true)
+    expect((await runtime.generateChapter(slug, "c1")).written).toBe(0)
+    expect(bank.check(slug).filter((issue) => issue.level === "error")).toEqual([])
+  })
+})
+
+describe("the two providers", () => {
+  it("sends the writing jobs to the author, not the live provider", async () => {
+    const live: Provider = {
+      name: "live",
+      model: "live",
+      complete: () => Promise.reject(new Error("a writing job reached the live provider")),
+      stream: () => {
+        throw new Error("a writing job reached the live provider")
+      },
+    }
+    const split = createRuntime(bank, { provider: live, author: fakeProvider(), by: "cli" })
+    const { questions } = await split.plan.questions(intake)
+    expect(questions.length).toBeGreaterThan(0)
+  })
+
+  it("sends module writing to the writer, not the author", async () => {
+    const author: Provider = {
+      name: "author",
+      model: "author",
+      complete: () => Promise.reject(new Error("module writing reached the planning model")),
+      stream: () => {
+        throw new Error("module writing reached the planning model")
+      },
+    }
+    const split = createRuntime(bank, { provider: fakeProvider(), author, writer: fakeProvider(), by: "cli" })
+    const { module } = await split.generate("the-thirty-years-war", "c1.u1", "reading")
+    expect(module.frontmatter.kind).toBe("reading")
   })
 })

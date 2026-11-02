@@ -30,6 +30,9 @@ The provider is read from `.env.local` at the repo root (gitignored) or the envi
 | `ANTHROPIC_API_KEY` | Enables the Anthropic adapter. Without it the deterministic fake provider runs            |
 | `LF_PROVIDER`       | `anthropic` or `fake`; default `anthropic` when a key is present, else `fake`             |
 | `LF_MODEL`          | Model id for the real adapter; default in `packages/runtime/src/env.ts` (`DEFAULT_MODEL`) |
+| `LF_AUTHOR`         | `claude-code` or `cursor`: plan, generate and revise with that harness, run headless and signed in as you (`claude` or `cursor-agent` on the PATH). Claude Code gets only its file-reading and web tools; Cursor runs in ask mode. Unset, they use the provider above |
+| `LF_PLAN_MODEL`     | With `LF_AUTHOR`: the model that plans and revises, such as `opus`. Unset, the harness's default |
+| `LF_WRITE_MODEL`    | With `LF_AUTHOR`: the model that writes modules, such as `sonnet`. Most of the usage is here. Unset, the harness's default |
 
 Then:
 

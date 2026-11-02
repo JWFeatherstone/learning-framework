@@ -116,39 +116,37 @@ function reading(inputs: ReadingInputs): ReadingOutput {
   const verified = references.filter((reference) => reference.verification === "verified")
   const cite = verified.length ? ` ${verified.map((reference) => `[[ref:${reference.id}]]`).join(" ")}` : ""
   const objectiveLinks = unit.objectives.map((objective) => `[[obj:${objective.id}]]`).join(", ")
-  const body = `## Framing
+  const body = `This unit asks what happened in ${unit.title.toLowerCase()} and why it mattered to those living through it. It serves ${objectiveLinks}.
 
-This unit asks what happened in ${unit.title.toLowerCase()} and why it mattered to those living through it. It serves ${objectiveLinks}.
+## Before
 
-## Material
+The actors held positions that made sense to each of them.${cite} Setting those out first is the only way to see the later choices as choices.
 
-The account runs in three parts: the situation before, the decisive events, and what followed.${cite}
+:::term Constraint
+What an actor could not do, whatever it wanted.
+:::
 
-### Before
+## The events
 
-The actors held positions that made sense to each of them. Setting those out first is the only way to see the later choices as choices.
+Each step narrowed the options of the next.
 
-### The events
+:::example Reading a decision
+1. **Name who decided.** A choice belongs to someone, not to a country.
+2. **Name what they could not do.** The constraint explains more than the motive.
+:::
 
-Each step narrowed the options of the next. The reading takes them in order and names who decided what, and when.
+:::key
+Each decision made sense from where it was taken; the outcome made sense from nowhere.
+:::
 
-### After
+:::check What turns a local matter into a wider one?
+Escalation: the point at which other actors decide they cannot stay out.
+:::
 
-The consequences were read differently in each capital, which is where the next unit begins.
+## Recap
 
-## Perspectives
-
-From one side the events look like a response to provocation; from another, like a plan carried out. A third view, from those with the least power to act, is the one most often left out.
-
-## Key terms
-
-- **Precedent**: what earlier cases let actors expect.
-- **Constraint**: what an actor could not do, whatever it wanted.
-- **Escalation**: the point at which a local matter stopped being local.
-
-## Go deeper
-
-${verified.length ? verified.map((reference) => `- ${reference.citation} [[ref:${reference.id}]]`).join("\n") : "- The references for this unit have not been added yet."}
+- Positions first, then choices.
+- Constraints explain more than motives.
 `
   return {
     approach: "perspectives",
@@ -230,7 +228,7 @@ function grade(inputs: GradeInputs): OutcomeOutput {
   const gaps = [...byObjective].filter(([, value]) => value.score / value.of < 0.5).map(([objective]) => ({
     objective,
     diagnosis: "The evidence shows one side only, or none.",
-    suggestion: "Reread the Perspectives section and try the seminar again.",
+    suggestion: "Reread the reading and try the seminar again.",
   }))
   const thin = items.every((item) => item.score === 0)
   return { confidence: thin ? "low" : "medium", items, gaps }

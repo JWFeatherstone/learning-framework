@@ -1,6 +1,6 @@
 import { parseArgs } from "node:util"
 import { openBank, openIndex } from "@lf/bank"
-import { createRuntime, loadEnv, providerFromEnv } from "@lf/runtime"
+import { authorFromEnv, createRuntime, loadEnv, providerFromEnv } from "@lf/runtime"
 
 const USAGE = `lf: the learning framework's command line
 
@@ -14,9 +14,9 @@ const USAGE = `lf: the learning framework's command line
   lf verify <topic> <reference> [--state verified|unverified|failed]
                                             record that a human checked a reference
   lf bank index                             rebuild the derived index
-  lf provider                               say which provider and model the environment selects
+  lf provider                               say which providers the environment selects
 
-Reads the bank from $BANK_DIR and the provider from .env.local (ANTHROPIC_API_KEY, LF_PROVIDER, LF_MODEL).`
+Reads the bank from $BANK_DIR and the providers from .env.local (ANTHROPIC_API_KEY, LF_PROVIDER, LF_MODEL, LF_AUTHOR, LF_PLAN_MODEL, LF_WRITE_MODEL).`
 
 async function main(argv: string[]) {
   const { positionals, values } = parseArgs({
@@ -32,7 +32,10 @@ async function main(argv: string[]) {
   const [command, ...rest] = positionals
   loadEnv()
   const bank = openBank()
-  const runtime = () => createRuntime(bank, { provider: providerFromEnv(), by: "cli" })
+  const runtime = () => {
+    const provider = providerFromEnv()
+    return createRuntime(bank, { provider, author: authorFromEnv(provider, "plan"), writer: authorFromEnv(provider, "write"), by: "cli" })
+  }
 
   switch (command) {
     case "check": {
@@ -151,7 +154,7 @@ async function main(argv: string[]) {
     }
     case "provider": {
       const provider = providerFromEnv()
-      console.log(`${provider.name} (${provider.model})`)
+      console.log(`live: ${provider.name} (${provider.model})\nauthor: ${authorFromEnv(provider, "plan").name} (plan ${authorFromEnv(provider, "plan").model}, write ${authorFromEnv(provider, "write").model})`)
       return
     }
     default:

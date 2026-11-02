@@ -12,6 +12,7 @@ import {
   TestOutput,
   unitState,
   CONTRACTS_VERSION,
+  MODULE_KINDS,
   type Intake,
   type IntakeAnswer,
   type IntakeQuestion,
@@ -26,7 +27,7 @@ import {
   type Unit,
 } from "@lf/contracts"
 import type { z } from "zod"
-import { loadEnv, providerFromEnv } from "./env"
+import { authorFromEnv, loadEnv, providerFromEnv } from "./env"
 import { fakeProvider } from "./fake"
 import type { GradeInputs, ProposeInputs, ReviseInputs, TutorInputs, UnitContext } from "./inputs"
 import { asMessages, extractJson, render, type Job } from "./prompt"
@@ -35,7 +36,14 @@ import type { Message, Provider } from "./provider"
 export type { CompleteOptions, Completion, Message, Provider } from "./provider"
 export type { ProposeInputs } from "./inputs"
 export { anthropicProvider } from "./provider"
-export { fakeProvider, loadEnv, providerFromEnv }
+export { claudeCodeProvider, cursorProvider } from "./harness"
+export { authorFromEnv, fakeProvider, loadEnv, providerFromEnv }
+
+/** A writing job's conversation with a harness: resumed across the wizard's steps, reporting as it reads. */
+export interface Run {
+  session?: string
+  onProgress?: (line: string) => void
+}
 
 export interface ProposedRevision {
   id: string
@@ -51,16 +59,20 @@ export interface Graded {
 // writes through the bank. The server and the CLI both call these and nothing else writes a topic.
 export interface Runtime {
   provider: { name: string; model: string }
+  author: { name: string; model: string }
   plan: {
-    questions(intake: Intake): Promise<IntakeQuestion[]>
-    propose(inputs: ProposeInputs): Promise<PlanOutput>
+    questions(intake: Intake, run?: Run): Promise<{ questions: IntakeQuestion[]; session?: string }>
+    propose(inputs: ProposeInputs, run?: Run): Promise<{ plan: PlanOutput; session?: string }>
     /** Confirms a proposal: the topic exists from here on. Returns the slug. */
     create(intake: Intake, answers: IntakeAnswer[], plan: PlanOutput): Promise<string>
     revise(slug: string, trigger: string, outcome?: Outcome): Promise<{ revision: ProposedRevision | null; reason?: string }>
     accept(slug: string, id: string): Promise<Plan>
     reject(slug: string, id: string): Promise<void>
   }
-  generate(slug: string, unit: string, kind: ModuleKind): Promise<{ module: Module; issues: Issue[] }>
+  generate(slug: string, unit: string, kind: ModuleKind, run?: Run): Promise<{ module: Module; issues: Issue[]; session?: string }>
+  /** Every module in a chapter not yet written against the current plan, in reading order, in one
+      conversation with the author so the units build on each other and the sources are read once. */
+  generateChapter(slug: string, chapter: string, run?: Run & { onWritten?: (unit: string, kind: ModuleKind) => void }): Promise<{ written: number; session?: string }>
   tutor: {
     start(slug: string, unit: string): Promise<LoadedSession>
     turn(slug: string, sessionId: string, text: string): AsyncIterable<string>
@@ -80,7 +92,12 @@ export interface Runtime {
 type ModuleProgress = NonNullable<NonNullable<Progress["units"][string]>["modules"]["reading"]>
 
 interface Options {
+  /** The live provider: the tutor and the grader. */
   provider?: Provider
+  /** The planning jobs' provider: plan, revise. Defaults to `provider`. */
+  author?: Provider
+  /** The module-writing jobs' provider: generate. Defaults to `author`. */
+  writer?: Provider
   /** Recorded in provenance. */
   by?: "server" | "cli"
 }
@@ -115,19 +132,36 @@ const trailOf = (plan: Plan, unitId: string): string[] => {
 
 export function createRuntime(bank: Bank, options: Options = {}): Runtime {
   const provider = options.provider ?? fakeProvider()
+  const author = options.author ?? provider
+  const writer = options.writer ?? author
   const by = options.by ?? "server"
 
-  /** Asks for JSON and validates it; one more try with the validation errors if the first reply fails. */
-  async function ask<T>(job: Job, inputs: unknown, schema: z.ZodType<T>): Promise<{ value: T; prompt: string; cost: Provenance["cost"] }> {
+  /** Asks for JSON and validates it; one more try with the validation errors if the first reply fails.
+      Grading is live, like the tutor; writing modules goes to the writer; the rest plans the course and
+      goes to the author. */
+  async function ask<T>(
+    job: Job,
+    inputs: unknown,
+    schema: z.ZodType<T>,
+    run: Run & { sources?: string[] } = {},
+  ): Promise<{ value: T; prompt: string; cost: Provenance["cost"]; model: string; session?: string }> {
+    const via = job === "grade" ? provider : job.startsWith("generate.") ? writer : author
     const rendered = render(job, inputs, schema)
     const messages = asMessages(rendered)
     let cost = { inputTokens: 0, outputTokens: 0 }
+    let session = run.session
+    let model = via.model
     let lastError = ""
     for (let attempt = 0; attempt < 2; attempt += 1) {
-      const reply = await provider.complete({ messages })
-      cost = { inputTokens: cost.inputTokens + reply.usage.inputTokens, outputTokens: cost.outputTokens + reply.usage.outputTokens }
+      const reply = await via.complete({ messages, sources: run.sources, session, onProgress: run.onProgress })
+      session = reply.session ?? session
+      model = reply.model ?? model
+      cost = {
+        inputTokens: cost.inputTokens + (reply.usage?.inputTokens ?? 0),
+        outputTokens: cost.outputTokens + (reply.usage?.outputTokens ?? 0),
+      }
       const parsed = schema.safeParse(tryJson(reply.text))
-      if (parsed.success) return { value: parsed.data, prompt: rendered.prompt, cost }
+      if (parsed.success) return { value: parsed.data, prompt: rendered.prompt, cost, model: `${via.name}/${model}`, session }
       lastError = parsed.error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`).join("; ")
       messages.push({ role: "assistant", content: reply.text }, { role: "user", content: `That did not validate: ${lastError}. Reply again with JSON only.` })
     }
@@ -142,9 +176,9 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
     }
   }
 
-  const provenance = (prompt: string, inputs: string[], cost: Provenance["cost"]): Provenance => ({
+  const provenance = (prompt: string, model: string, inputs: string[], cost: Provenance["cost"]): Provenance => ({
     generatedAt: now(),
-    model: `${provider.name}/${provider.model}`,
+    model,
     prompt,
     inputs,
     by,
@@ -228,11 +262,11 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
   }
 
   async function gradeSession(slug: string, loaded: LoadedSession, unit: Unit, inputs: GradeInputs): Promise<Graded> {
-    const { value, prompt } = await ask("grade", inputs, OutcomeOutput)
+    const { value, prompt, model } = await ask("grade", inputs, OutcomeOutput)
     const outcome: Outcome = {
       session: loaded.session.id,
       module: `${unit.id}/${loaded.session.kind}`,
-      grader: { model: `${provider.name}/${provider.model}`, prompt },
+      grader: { model, prompt },
       ...value,
     }
     bank.writeOutcome(slug, outcome)
@@ -255,19 +289,21 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
 
   const runtime: Runtime = {
     provider: { name: provider.name, model: provider.model },
+    author: { name: author.name, model: author.model },
 
     plan: {
-      async questions(intake) {
-        const { value } = await ask("plan.questions", { intake }, QuestionsOutput)
-        return value.questions
+      async questions(intake, run = {}) {
+        const { value, session } = await ask("plan.questions", { intake }, QuestionsOutput, { ...run, sources: intake.sources })
+        return { questions: value.questions, session }
       },
-      async propose(inputs) {
-        const { value } = await ask("plan.propose", inputs, PlanOutput)
-        return value
+      async propose(inputs, run = {}) {
+        const { value, session } = await ask("plan.propose", inputs, PlanOutput, { ...run, sources: inputs.intake.sources })
+        return { plan: value, session }
       },
       async create(intake, answers, proposal) {
+        const { title, ...learner } = intake
         const taken = new Set(bank.listTopics().map((topic) => topic.id))
-        const base = slugify(intake.title)
+        const base = slugify(title)
         let id = base
         for (let n = 2; taken.has(id); n += 1) id = `${base}-${n}`
         const plan: Plan = { version: 1, topic: id, contractsVersion: CONTRACTS_VERSION, ...proposal }
@@ -275,15 +311,10 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
         bank.createTopic(
           {
             id,
-            title: intake.title,
+            title,
             created: today(),
             contractsVersion: CONTRACTS_VERSION,
-            learner: {
-              goals: intake.goals,
-              prior: intake.prior,
-              ...(intake.hoursPerWeek ? { hoursPerWeek: intake.hoursPerWeek } : {}),
-              ...(intake.preferences ? { preferences: intake.preferences } : {}),
-            },
+            learner,
             intake: answers,
             models: undefined,
           },
@@ -301,7 +332,7 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
           ...(outcome ?? latestOutcome(loaded) ? { outcome: outcome ?? latestOutcome(loaded) } : {}),
           trigger,
         }
-        const { value } = await ask("plan.revise", inputs, RevisionOutput)
+        const { value } = await ask("plan.revise", inputs, RevisionOutput, { sources: loaded.topic.learner.sources })
         if (!value.revise) return { revision: null, reason: value.reason }
         const revision: Revision = {
           basedOn: loaded.plan.version,
@@ -341,7 +372,7 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
       },
     },
 
-    async generate(slug, unitId, kind) {
+    async generate(slug, unitId, kind, run = {}) {
       const loaded = bank.loadTopic(slug)
       const unit = findUnit(loaded.plan, unitId)
       const before = unit.modules[kind].state
@@ -349,15 +380,19 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
       try {
         const reading = kind === "reading" ? undefined : bank.readModule(slug, unitId, "reading")?.body
         const base = { ...context(loaded, unit), ...(reading ? { reading } : {}) }
+        const sources = loaded.topic.learner.sources
         const path = `modules/${unitId}/${kind}.md`
         const inputs = [`plan.yaml@v${loaded.plan.version}`, ...(reading ? [`modules/${unitId}/reading.md`] : [])]
         let errors: string[] = []
+        let session = run.session
+        const via = () => ({ sources, session, onProgress: run.onProgress })
         for (let attempt = 0; attempt < 2; attempt += 1) {
           const extra = errors.length ? { errors } : {}
           let approach: string
           if (kind === "reading") {
             const references = loaded.references.map(({ id, type, citation, verification }) => ({ id, type, citation, verification: verification.state }))
-            const { value, prompt, cost } = await ask("generate.reading", { ...base, references, ...extra }, ReadingOutput)
+            const { value, prompt, cost, model, session: next } = await ask("generate.reading", { ...base, references, ...extra }, ReadingOutput, via())
+            session = next
             for (const reference of value.newReferences) {
               if (!loaded.references.some((existing) => existing.id === reference.id)) {
                 const { note, ...rest } = reference
@@ -371,14 +406,15 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
               objectives: value.objectives,
               approach: value.approach,
               planVersion: loaded.plan.version,
-              provenance: provenance(prompt, inputs, cost),
+              provenance: provenance(prompt, model, inputs, cost),
               ...(value.estimate ? { estimate: value.estimate } : {}),
               references: [...new Set([...value.references, ...value.newReferences.map((reference) => reference.id)])],
             }
             bank.writeModule(slug, unitId, kind, frontmatter, value.body)
             approach = value.approach
           } else if (kind === "exercise") {
-            const { value, prompt, cost } = await ask("generate.exercise", { ...base, ...extra }, ExerciseOutput)
+            const { value, prompt, cost, model, session: next } = await ask("generate.exercise", { ...base, ...extra }, ExerciseOutput, via())
+            session = next
             const frontmatter: ModuleFrontmatter = {
               id: `${unitId}/exercise`,
               kind: "exercise",
@@ -386,13 +422,14 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
               objectives: value.objectives,
               approach: value.approach,
               planVersion: loaded.plan.version,
-              provenance: provenance(prompt, inputs, cost),
+              provenance: provenance(prompt, model, inputs, cost),
               form: value.form,
             }
             bank.writeModule(slug, unitId, kind, frontmatter, value.body)
             approach = value.approach
           } else {
-            const { value, prompt, cost } = await ask("generate.test", { ...base, ...extra }, TestOutput)
+            const { value, prompt, cost, model, session: next } = await ask("generate.test", { ...base, ...extra }, TestOutput, via())
+            session = next
             const frontmatter: ModuleFrontmatter = {
               id: `${unitId}/test`,
               kind: "test",
@@ -400,7 +437,7 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
               objectives: value.objectives,
               approach: value.approach,
               planVersion: loaded.plan.version,
-              provenance: provenance(prompt, inputs, cost),
+              provenance: provenance(prompt, model, inputs, cost),
               items: value.items,
               ...(value.passing ? { passing: value.passing } : {}),
             }
@@ -411,13 +448,33 @@ export function createRuntime(bank: Bank, options: Options = {}): Runtime {
           const issues = bank.check(slug).filter((issue) => issue.path === path)
           // Unverified citations are for a human to resolve, not for another try.
           errors = issues.filter((issue) => issue.level === "error" && !issue.message.includes("a learner is only sent to verified")).map((issue) => issue.message)
-          if (errors.length === 0 || attempt === 1) return { module: readModuleOrThrow(slug, unitId, kind), issues }
+          if (errors.length === 0 || attempt === 1) return { module: readModuleOrThrow(slug, unitId, kind), issues, session }
         }
         throw new Error("unreachable")
       } catch (cause) {
         bank.setModuleState(slug, unitId, kind, before === "generating" ? "planned" : before, unit.modules[kind].approach)
         throw cause
       }
+    },
+
+    async generateChapter(slug, chapterId, run = {}) {
+      const plan = bank.loadTopic(slug).plan
+      const chapter = plan.nodes
+        .flatMap((node) => (node.kind === "part" ? node.children : [node]))
+        .find((candidate) => candidate.id === chapterId)
+      if (!chapter) throw new Error(`No chapter ${chapterId} in the plan`)
+      let session = run.session
+      let written = 0
+      for (const unit of chapter.children) {
+        for (const kind of MODULE_KINDS) {
+          if (unit.modules[kind].state === "generated") continue
+          run.onProgress?.(`Writing the ${kind} for ${unit.title}`)
+          session = (await runtime.generate(slug, unit.id, kind, { session, onProgress: run.onProgress })).session
+          written += 1
+          run.onWritten?.(unit.id, kind)
+        }
+      }
+      return { written, session }
     },
 
     tutor: {

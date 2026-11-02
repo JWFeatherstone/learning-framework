@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fakeProvider } from "./fake"
+import { claudeCodeProvider, cursorProvider } from "./harness"
 import { anthropicProvider, type Provider } from "./provider"
 
 /** The model used when LF_MODEL is unset. Check it against Anthropic's current list before relying on it. */
@@ -33,4 +34,17 @@ export function providerFromEnv(env: NodeJS.ProcessEnv = process.env): Provider 
     return anthropicProvider(key, model)
   }
   throw new Error(`Unknown LF_PROVIDER ${choice}; use anthropic or fake`)
+}
+
+/** The provider for the writing jobs. LF_AUTHOR=claude-code|cursor runs that harness headless; unset,
+    they use the live provider that the tutor and the grader use. A harness takes its model per job:
+    LF_PLAN_MODEL for planning and revising (few calls, where the course is decided), LF_WRITE_MODEL for
+    writing modules (most of the volume); unset, the harness's own default. */
+export function authorFromEnv(live: Provider, job: "plan" | "write", env: NodeJS.ProcessEnv = process.env): Provider {
+  const choice = env.LF_AUTHOR
+  if (!choice) return live
+  const model = job === "plan" ? env.LF_PLAN_MODEL : env.LF_WRITE_MODEL
+  if (choice === "claude-code") return claudeCodeProvider(model)
+  if (choice === "cursor") return cursorProvider(model)
+  throw new Error(`Unknown LF_AUTHOR ${choice}; use claude-code or cursor`)
 }

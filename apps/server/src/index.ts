@@ -3,7 +3,7 @@ import { resolve } from "node:path"
 import { serve } from "@hono/node-server"
 import { serveStatic } from "@hono/node-server/serve-static"
 import { openBank } from "@lf/bank"
-import { createRuntime, loadEnv, providerFromEnv } from "@lf/runtime"
+import { authorFromEnv, createRuntime, loadEnv, providerFromEnv } from "@lf/runtime"
 import { Hono } from "hono"
 import { api } from "./routes"
 
@@ -12,7 +12,12 @@ import { api } from "./routes"
 loadEnv()
 const bank = openBank()
 const provider = providerFromEnv()
-const runtime = createRuntime(bank, { provider, by: "server" })
+const runtime = createRuntime(bank, {
+  provider,
+  author: authorFromEnv(provider, "plan"),
+  writer: authorFromEnv(provider, "write"),
+  by: "server",
+})
 const port = Number(process.env.PORT ?? 3131)
 
 const app = new Hono()
@@ -25,5 +30,5 @@ if (existsSync(dist)) {
 }
 
 serve({ fetch: app.fetch, port }, () => {
-  console.log(`lf server on http://localhost:${port}, bank at ${bank.dir}, provider ${provider.name} (${provider.model})`)
+  console.log(`lf server on http://localhost:${port}, bank at ${bank.dir}, provider ${provider.name} (${provider.model}), author ${runtime.author.name} (plan ${runtime.author.model}, write ${authorFromEnv(provider, "write").model})`)
 })

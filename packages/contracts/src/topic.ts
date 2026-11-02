@@ -6,7 +6,9 @@ export const LearnerProfile = z.object({
   goals: z.string().min(1),
   prior: z.string().min(1),
   hoursPerWeek: z.number().positive().optional(),
+  weeks: z.number().int().positive().optional(),
   preferences: z.string().optional(),
+  sources: z.array(z.string().min(1)).optional(),
 })
 
 export const ModelSettings = z
