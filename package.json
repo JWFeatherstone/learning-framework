@@ -8,11 +8,11 @@
     "node": ">=24"
   },
   "scripts": {
-    "dev": "pnpm -r --parallel --filter @lf/server --filter @lf/client run dev",
-    "lab": "pnpm --filter @lf/lab run dev",
-    "typecheck": "pnpm -r run typecheck",
-    "test": "pnpm -r run test",
-    "build": "pnpm -r run build",
+    "dev": "corepack pnpm -r --parallel --filter @lf/server --filter @lf/client run dev",
+    "lab": "corepack pnpm --filter @lf/lab run dev",
+    "typecheck": "corepack pnpm -r run typecheck",
+    "test": "corepack pnpm -r run test",
+    "build": "corepack pnpm -r run build",
     "check": "node packages/cli/bin/lf.js check",
     "lf": "node packages/cli/bin/lf.js",
     "format": "prettier --write ."
