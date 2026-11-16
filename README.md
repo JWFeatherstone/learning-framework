@@ -1,42 +1,36 @@
-A framework for structured, agent-guided self-learning. For any topic of interest, the user defines their scope, background, time constraints, and learning preferences, whereupon the agent designs a learning programme consisting of a hierarchy of chapters and units. Each unit is divided into three components: reading (or intake), exercises (or application and internalization), and testing. Each test, seminar or exercise feeds back into the plan as revisions that inform the development of the next chapter and the shape of the programme moving forward.
+# Learning Framework
 
-Everything is files in a memory bank; the app reads and writes them through one runtime that a server and a CLI both call.
+A framework for structured, agent-guided self-learning.
 
-## Quick start
+## Install
 
-You need Node 24 (the repo pins it in `.nvmrc`; [nvm](https://github.com/nvm-sh/nvm) is the easy way) and git. pnpm comes through corepack, so nothing is installed globally.
+Needs Node 24 and git.
 
 ```sh
 git clone https://github.com/JWFeatherstone/learning-framework.git
 cd learning-framework
 nvm use
 corepack pnpm install
-cp .env.example .env.local   # then choose a provider, below
-corepack pnpm dev
 ```
 
-Open http://localhost:5173 and start a new topic. Topics are saved as files in `bank/` at the repo root (gitignored); set `BANK_DIR` to keep them somewhere else.
+## Configure
 
-## Choose a provider
+```sh
+cp .env.example .env.local
+```
 
-Pick one and put it in `.env.local`. `corepack pnpm lf provider` shows what is selected.
+In `.env.local`, uncomment one provider:
 
-- **Claude Code**: `LF_AUTHOR=claude-code`. Uses your Claude subscription through `claude`, which
-  must be installed and signed in; no API key. It plans, writes and grades the course, reading any
-  sources you give a topic and the web, never writing, and runs the seminar tutor. A tutor reply
-  takes a few seconds to start. (`LF_AUTHOR=cursor` does the same through `cursor-agent`, though its
-  tutor replies arrive whole rather than streamed.)
-- **Anthropic API**: `ANTHROPIC_API_KEY=…`. The same, billed per use.
+- `LF_AUTHOR=claude-code`: your Claude subscription (`claude` installed and signed in)
+- `ANTHROPIC_API_KEY=…`: the API, billed per use
 
-With neither, the app runs on placeholder text: fine for a look around, not for learning.
+The other settings in `.env.example` are optional.
 
-Optional:
+## Run
 
-| Variable         | Meaning                                                                          |
-| ---------------- | -------------------------------------------------------------------------------- |
-| `LF_PLAN_MODEL`  | Claude Code: the model that plans, grades and revises, such as `opus`             |
-| `LF_WRITE_MODEL` | Claude Code: the model that writes modules and tutors, such as `sonnet`; most of the usage |
-| `LF_MODEL`       | API: the model; default `claude-opus-5-5`                                         |
-| `BANK_DIR`       | Where topics live; default `bank/` at the repo root                               |
+```sh
+corepack pnpm dev           # open http://localhost:5173
+corepack pnpm lf provider   # check which provider is in use
+```
 
-Working on the code: start with `CLAUDE.md`.
+Topics are saved in `bank/`.
