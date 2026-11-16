@@ -1,6 +1,10 @@
 # Learning Framework
 
-A framework for structured, agent-guided self-learning.
+A framework for structured, agent-guided self-learning. In short:
+
+1. The user specifies a topic, learning goals and preferences and pre-existing knowledge.
+2. The agent develops a high-level learning plan consisting of a hierarchy of topics, chapters, and modules.
+3. Content is generated chapter-by-chapter in response to developments in the users' learning process in previous chapters.
 
 ## Install
 
