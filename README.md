@@ -23,9 +23,10 @@ Pick one and put it in `.env.local`. `corepack pnpm lf provider` shows what is s
 
 - **Claude Code**: `LF_AUTHOR=claude-code`. Uses your Claude subscription through `claude`, which
   must be installed and signed in; no API key. It plans, writes and grades the course, reading any
-  sources you give a topic and the web, never writing. The seminar tutor is not on it yet, so
-  seminars give placeholder replies. (`LF_AUTHOR=cursor` does the same through `cursor-agent`.)
-- **Anthropic API**: `ANTHROPIC_API_KEY=…`. Everything real, including the tutor, billed per use.
+  sources you give a topic and the web, never writing, and runs the seminar tutor. A tutor reply
+  takes a few seconds to start. (`LF_AUTHOR=cursor` does the same through `cursor-agent`, though its
+  tutor replies arrive whole rather than streamed.)
+- **Anthropic API**: `ANTHROPIC_API_KEY=…`. The same, billed per use.
 
 With neither, the app runs on placeholder text: fine for a look around, not for learning.
 
@@ -34,7 +35,7 @@ Optional:
 | Variable         | Meaning                                                                          |
 | ---------------- | -------------------------------------------------------------------------------- |
 | `LF_PLAN_MODEL`  | Claude Code: the model that plans, grades and revises, such as `opus`             |
-| `LF_WRITE_MODEL` | Claude Code: the model that writes modules, such as `sonnet`; most of the usage   |
+| `LF_WRITE_MODEL` | Claude Code: the model that writes modules and tutors, such as `sonnet`; most of the usage |
 | `LF_MODEL`       | API: the model; default `claude-opus-5-5`                                         |
 | `BANK_DIR`       | Where topics live; default `bank/` at the repo root                               |
 

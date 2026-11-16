@@ -153,8 +153,11 @@ async function main(argv: string[]) {
       return
     }
     case "provider": {
-      const provider = providerFromEnv()
-      console.log(`live: ${provider.name} (${provider.model})\nauthor: ${authorFromEnv(provider, "plan").name} (plan ${authorFromEnv(provider, "plan").model}, write ${authorFromEnv(provider, "write").model})`)
+      const live = providerFromEnv()
+      for (const job of ["tutor", "plan", "write"] as const) {
+        const provider = authorFromEnv(live, job)
+        console.log(`${job}: ${provider.name} (${provider.model})`)
+      }
       return
     }
     default:

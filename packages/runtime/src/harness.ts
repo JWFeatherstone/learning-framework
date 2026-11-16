@@ -5,18 +5,20 @@ import { createInterface } from "node:readline"
 import { z } from "zod"
 import type { Completion, Message, Provider } from "./provider"
 
-// Agent harnesses run headless as the provider for the writing jobs. They read the learner's sources
-// and the web with their own tools, read-only, and reply with text the runtime validates and writes,
-// so the runtime stays the only writer. Claude Code and Cursor share most of their event stream.
+// Agent harnesses run headless as the provider for the writing jobs and the tutor. They read the
+// learner's sources and the web with their own tools, read-only, and reply with text the runtime
+// validates and writes, so the runtime stays the only writer. Claude Code and Cursor share most of
+// their event stream.
 
-/** What the harness has not seen: the whole conversation on a fresh run; on a resumed one, only what
-    follows its last reply. */
+/** What the harness has not seen: on a resumed run, only what follows its last reply; on a fresh one,
+    the whole conversation, its earlier replies set out as a transcript (the tutor's case). */
 export function promptFor(messages: Message[], session?: string): string {
-  const from = session ? messages.findLastIndex((message) => message.role === "assistant") + 1 : 0
-  return messages
-    .slice(from)
-    .map((message) => message.content)
-    .join("\n\n")
+  const join = (part: Message[]) => part.map((message) => message.content).join("\n\n")
+  if (session) return join(messages.slice(messages.findLastIndex((message) => message.role === "assistant") + 1))
+  const first = messages.findIndex((message) => message.role === "assistant")
+  if (first < 0) return join(messages)
+  const turns = messages.slice(first).map((message) => `${message.role === "assistant" ? "You" : "User"}: ${message.content}`)
+  return [join(messages.slice(0, first)), "The conversation so far:", ...turns, "Reply with your next turn only."].join("\n\n")
 }
 
 /** The directories among the sources, `~` expanded. A site reaches the harness through the prompt. */
@@ -41,6 +43,12 @@ const Assistant = z.object({
   message: z.object({
     content: z.array(z.object({ type: z.string(), name: z.string().optional(), input: Fields.optional() })),
   }),
+})
+
+// With --include-partial-messages Claude Code also streams the reply's text as it is written.
+const Delta = z.object({
+  type: z.literal("stream_event"),
+  event: z.object({ type: z.literal("content_block_delta"), delta: z.object({ type: z.literal("text_delta"), text: z.string() }) }),
 })
 
 // Cursor reports one as its own event, keyed by the tool ({ readToolCall: { args } }) beside bookkeeping
@@ -83,6 +91,7 @@ const Result = z.object({
 export type HarnessEvent =
   | { kind: "start"; session: string; model?: string }
   | { kind: "progress"; line: string }
+  | { kind: "text"; text: string }
   | { kind: "result"; ok: boolean; text: string; session: string; usage?: Completion["usage"] }
 
 // The most telling argument first: what a search looked for, then where a read looked.
@@ -103,6 +112,8 @@ export function readEvent(line: string): HarnessEvent[] {
   }
   const init = Init.safeParse(data)
   if (init.success) return [{ kind: "start", session: init.data.session_id, model: init.data.model }]
+  const delta = Delta.safeParse(data)
+  if (delta.success) return [{ kind: "text", text: delta.data.event.delta.text }]
   const assistant = Assistant.safeParse(data)
   if (assistant.success) {
     return assistant.data.message.content.flatMap((block) =>
@@ -125,15 +136,15 @@ export function readEvent(line: string): HarnessEvent[] {
   return []
 }
 
-/** Runs a harness to its result, reporting each tool call. The prompt goes on stdin when `input` is given. */
-async function run(
+/** Runs a harness, yielding its events, the result last; throws when it fails. The prompt goes on stdin
+    when `input` is given. */
+async function* run(
   command: string,
   args: string[],
   cwd: string,
   env: NodeJS.ProcessEnv,
   input: string | undefined,
-  onProgress: ((line: string) => void) | undefined,
-): Promise<Completion> {
+): AsyncGenerator<HarnessEvent> {
   const child = spawn(command, args, { cwd, env })
   const exited = new Promise<{ code: number | null; error?: Error }>((resolve) => {
     child.on("error", (error) => resolve({ code: null, error }))
@@ -145,51 +156,60 @@ async function run(
   child.stdin.on("error", () => {})
   child.stdin.end(input)
 
-  let model: string | undefined
   let result: Extract<HarnessEvent, { kind: "result" }> | undefined
   for await (const line of createInterface({ input: child.stdout })) {
     for (const event of readEvent(line)) {
-      if (event.kind === "start") model = event.model
-      else if (event.kind === "progress") onProgress?.(event.line.replace(`${cwd}/`, ""))
-      else result = event
+      if (event.kind === "result") result = event
+      else yield event.kind === "progress" ? { ...event, line: event.line.replace(`${cwd}/`, "") } : event
     }
   }
   const { code, error } = await exited
   if (error) throw (error as NodeJS.ErrnoException).code === "ENOENT" ? new Error(`${command} is not on the PATH`) : error
   if (!result?.ok) throw new Error(`${command} failed (exit ${code}): ${(result?.text || stderr).trim().slice(0, 400)}`)
-  return { text: result.text, session: result.session, model, usage: result.usage }
+  yield result
 }
 
-type Launch = (
-  prompt: string,
-  dirs: string[],
-  session: string | undefined,
-  onProgress: ((line: string) => void) | undefined,
-) => Promise<Completion>
+type Launch = (prompt: string, dirs: string[], session: string | undefined) => AsyncGenerator<HarnessEvent>
 
 function harness(name: string, model: string | undefined, launch: Launch): Provider {
-  const complete: Provider["complete"] = ({ messages, sources, session, onProgress }) =>
-    launch(promptFor(messages, session), directories(sources), session, onProgress)
+  const events = ({ messages, sources, session }: Parameters<Provider["complete"]>[0]) =>
+    launch(promptFor(messages, session), directories(sources), session)
   return {
     name,
     // Unset, the harness's own default; each reply names the model that answered.
     model: model ?? "default",
-    complete,
+    async complete(options) {
+      let answered: string | undefined
+      for await (const event of events(options)) {
+        if (event.kind === "start") answered = event.model
+        else if (event.kind === "progress") options.onProgress?.(event.line)
+        else if (event.kind === "result") return { text: event.text, session: event.session, model: answered, usage: event.usage }
+      }
+      throw new Error(`${name} gave no result`)
+    },
+    // The text as it is written; a harness that does not stream it (Cursor) gives the reply at the end.
     async *stream(options) {
-      yield (await complete(options)).text
+      let streamed = false
+      for await (const event of events(options)) {
+        if (event.kind === "text") {
+          streamed = true
+          yield event.text
+        } else if (event.kind === "result" && !streamed) yield event.text
+      }
     },
   }
 }
 
 const READ_ONLY = "Read,Grep,Glob,WebSearch,WebFetch"
 
-/** Claude Code, signed in as the user. Only the built-in tools that read files and the web; no MCP
-    servers or skills, which also keeps its context small. */
-export function claudeCodeProvider(model?: string): Provider {
-  return harness("claude-code", model, (prompt, [cwd = tmpdir(), ...more], session, onProgress) => {
+/** Claude Code, signed in as the user. Only the built-in tools that read files and the web, or none
+    (the tutor, which only talks); no MCP servers or skills, which also keeps its context small. */
+export function claudeCodeProvider(model?: string, { tools = true } = {}): Provider {
+  return harness("claude-code", model, (prompt, [cwd = tmpdir(), ...more], session) => {
     const args = [
-      ...["-p", "--output-format", "stream-json", "--verbose"],
-      ...["--tools", READ_ONLY, "--allowedTools", READ_ONLY, "--permission-mode", "dontAsk"],
+      ...["-p", "--output-format", "stream-json", "--verbose", "--include-partial-messages"],
+      ...(tools ? ["--tools", READ_ONLY, "--allowedTools", READ_ONLY] : ["--tools", ""]),
+      ...["--permission-mode", "dontAsk"],
       ...["--strict-mcp-config", "--disable-slash-commands"],
       ...(model ? ["--model", model] : []),
       ...more.flatMap((dir) => ["--add-dir", dir]),
@@ -198,7 +218,7 @@ export function claudeCodeProvider(model?: string): Provider {
     // Without the key in its environment it uses the signed-in Claude account, not the API key.
     const env = { ...process.env }
     delete env.ANTHROPIC_API_KEY
-    return run("claude", args, cwd, env, prompt, onProgress)
+    return run("claude", args, cwd, env, prompt)
   })
 }
 
@@ -207,7 +227,7 @@ export function claudeCodeProvider(model?: string): Provider {
     anything it would ask about is refused, web search included unless the user's Cursor CLI config sets
     autoAcceptWebSearch. Claude Code's tool list is the stricter guarantee. */
 export function cursorProvider(model?: string): Provider {
-  return harness("cursor", model, (prompt, [workspace = tmpdir(), ...more], session, onProgress) => {
+  return harness("cursor", model, (prompt, [workspace = tmpdir(), ...more], session) => {
     const args = [
       ...["-p", "--output-format", "stream-json", "--mode", "ask", "--trust", "--workspace", workspace],
       ...more.flatMap((dir) => ["--add-dir", dir]),
@@ -215,6 +235,6 @@ export function cursorProvider(model?: string): Provider {
       ...(session ? ["--resume", session] : []),
       prompt,
     ]
-    return run("cursor-agent", args, workspace, process.env, undefined, onProgress)
+    return run("cursor-agent", args, workspace, process.env, undefined)
   })
 }

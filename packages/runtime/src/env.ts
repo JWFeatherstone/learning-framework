@@ -36,15 +36,15 @@ export function providerFromEnv(env: NodeJS.ProcessEnv = process.env): Provider 
   throw new Error(`Unknown LF_PROVIDER ${choice}; use anthropic or fake`)
 }
 
-/** The provider for the writing and grading jobs. LF_AUTHOR=claude-code|cursor runs that harness headless; unset,
-    they use the live provider that the tutor uses. A harness takes its model per job:
-    LF_PLAN_MODEL for planning, grading and revising (few calls, where the course is decided), LF_WRITE_MODEL for
-    writing modules (most of the volume); unset, the harness's own default. */
-export function authorFromEnv(live: Provider, job: "plan" | "write", env: NodeJS.ProcessEnv = process.env): Provider {
+/** The provider for a job. LF_AUTHOR=claude-code|cursor runs that harness headless; unset, every job
+    uses the live provider. A harness takes its model per job: LF_PLAN_MODEL for planning, grading and
+    revising (few calls, where the course is decided), LF_WRITE_MODEL for writing modules and the tutor's
+    turns (most of the volume); unset, the harness's own default. The tutor runs without tools. */
+export function authorFromEnv(live: Provider, job: "plan" | "write" | "tutor", env: NodeJS.ProcessEnv = process.env): Provider {
   const choice = env.LF_AUTHOR
   if (!choice) return live
   const model = job === "plan" ? env.LF_PLAN_MODEL : env.LF_WRITE_MODEL
-  if (choice === "claude-code") return claudeCodeProvider(model)
+  if (choice === "claude-code") return claudeCodeProvider(model, { tools: job !== "tutor" })
   if (choice === "cursor") return cursorProvider(model)
   throw new Error(`Unknown LF_AUTHOR ${choice}; use claude-code or cursor`)
 }

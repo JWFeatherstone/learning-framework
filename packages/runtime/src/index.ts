@@ -92,7 +92,7 @@ export interface Runtime {
 type ModuleProgress = NonNullable<NonNullable<Progress["units"][string]>["modules"]["reading"]>
 
 interface Options {
-  /** The live provider: the tutor. */
+  /** The tutor's provider. */
   provider?: Provider
   /** The planning jobs' provider: plan, revise, grade. Defaults to `provider`. */
   author?: Provider

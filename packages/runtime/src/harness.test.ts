@@ -10,6 +10,8 @@ const claude = {
   init: `{"type":"system","subtype":"init","cwd":"/repo","session_id":"s1","tools":["Glob","Grep","Read"],"model":"claude-opus-5-5","permissionMode":"dontAsk","apiKeySource":"none"}`,
   tool: `{"type":"assistant","message":{"model":"claude-opus-5-5","content":[{"type":"thinking","thinking":""},{"type":"tool_use","id":"t1","name":"Read","input":{"file_path":"/repo/README.md"}}]},"session_id":"s1"}`,
   text: `{"type":"assistant","message":{"content":[{"type":"text","text":"# Flux"}]},"session_id":"s1"}`,
+  delta: `{"type":"stream_event","event":{"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"# Fl"}},"session_id":"s1"}`,
+  thinkingDelta: `{"type":"stream_event","event":{"type":"content_block_delta","index":0,"delta":{"type":"thinking_delta","thinking":""}},"session_id":"s1"}`,
   result: `{"type":"result","subtype":"success","is_error":false,"result":"# Flux","session_id":"s1","usage":{"input_tokens":4,"cache_creation_input_tokens":4552,"cache_read_input_tokens":12799,"output_tokens":20}}`,
 }
 const cursor = {
@@ -26,11 +28,13 @@ const cursor = {
 }
 
 describe("readEvent", () => {
-  it("reads Claude Code's start, tool calls and result, and ignores the rest", () => {
+  it("reads Claude Code's start, tool calls, text as it is written and result, and ignores the rest", () => {
     expect(readEvent(claude.hook)).toEqual([])
     expect(readEvent(claude.init)).toEqual([{ kind: "start", session: "s1", model: "claude-opus-5-5" }])
     expect(readEvent(claude.tool)).toEqual([{ kind: "progress", line: "Read /repo/README.md" }])
     expect(readEvent(claude.text)).toEqual([])
+    expect(readEvent(claude.delta)).toEqual([{ kind: "text", text: "# Fl" }])
+    expect(readEvent(claude.thinkingDelta)).toEqual([])
     expect(readEvent(claude.result)).toEqual([
       { kind: "result", ok: true, text: "# Flux", session: "s1", usage: { inputTokens: 17355, outputTokens: 20 } },
     ])
@@ -69,6 +73,12 @@ describe("promptFor", () => {
 
   it("sends the whole conversation on a fresh run", () => {
     expect(promptFor(messages.slice(0, 2))).toBe("Instructions\n\nInputs")
+  })
+
+  it("sets out earlier replies as a transcript on a fresh run", () => {
+    expect(promptFor(messages)).toBe(
+      "Instructions\n\nInputs\n\nThe conversation so far:\n\nYou: Not JSON\n\nUser: That did not validate\n\nReply with your next turn only.",
+    )
   })
 
   it("sends only what follows the harness's last reply when resuming", () => {

@@ -11,13 +11,11 @@ import { api } from "./routes"
 // @lf/runtime or @lf/bank that the CLI can make too. Serves the built client when dist/ exists.
 loadEnv()
 const bank = openBank()
-const provider = providerFromEnv()
-const runtime = createRuntime(bank, {
-  provider,
-  author: authorFromEnv(provider, "plan"),
-  writer: authorFromEnv(provider, "write"),
-  by: "server",
-})
+const live = providerFromEnv()
+const tutor = authorFromEnv(live, "tutor")
+const author = authorFromEnv(live, "plan")
+const writer = authorFromEnv(live, "write")
+const runtime = createRuntime(bank, { provider: tutor, author, writer, by: "server" })
 const port = Number(process.env.PORT ?? 3131)
 
 const app = new Hono()
@@ -30,5 +28,5 @@ if (existsSync(dist)) {
 }
 
 serve({ fetch: app.fetch, port }, () => {
-  console.log(`lf server on http://localhost:${port}, bank at ${bank.dir}, provider ${provider.name} (${provider.model}), author ${runtime.author.name} (plan ${runtime.author.model}, write ${authorFromEnv(provider, "write").model})`)
+  console.log(`lf server on http://localhost:${port}, bank at ${bank.dir}, tutor ${tutor.name} (${tutor.model}), plan ${author.name} (${author.model}), write ${writer.name} (${writer.model})`)
 })
